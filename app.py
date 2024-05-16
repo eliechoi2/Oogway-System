@@ -12,10 +12,15 @@ def login():
 def login_post():
     return redirect(url_for('main.profile'))
 
-#Administrator Routs
+#Administrator Routes
 @app.route('/admin-dashboard')
 def dashboard ():
     return render_template('/admin-dashboard.html')
+
+#Student Routes
+@app.route('/home')
+def home():
+    return render_template('/student-home.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
