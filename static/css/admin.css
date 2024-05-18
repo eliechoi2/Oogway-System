@@ -175,6 +175,9 @@ th {
     font-weight: 300;
 }
 
+.inbox-link:hover {
+    color: black
+}
 
 .rank-table {
     width: 10%;
@@ -190,3 +193,23 @@ th {
     transition: .5s;
 }
 
+.graph_placer {
+    padding: 1%;
+}
+
+.td-left {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.td-right {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgb(245, 244, 249);
+    color: white;
+    font-weight: 500;
+    transition: .5s;
+}
