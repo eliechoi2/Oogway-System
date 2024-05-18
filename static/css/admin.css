@@ -133,3 +133,60 @@ div#page_title {
     font-weight: 500;
     font-size: .9vw;
 }
+
+/* Dashboard Styling */
+
+.section {
+    box-shadow: 2px 2px 5px rgb(244, 244, 244);
+    border-radius: 10px;
+}
+
+.topic {
+    font-family: 'Poppins';
+    font-size: 1vw;
+    font-weight: 500;
+}
+
+.subtitle {
+    font-size: .8vw;
+    color: #A0AEC0;
+    font-family: 'Inter', sans-serif;
+}
+
+.progress_bar {
+    width: 80%;
+    height: auto;
+}
+
+td.student-name {
+    width: 20%;
+}
+
+tbody, td, tfoot, thead, tr {
+    border-style: none;
+    color: #A0AEC0;
+    font-family: 'Poppins';
+    font-size: .8vw;
+}
+
+th {
+    border: none;
+    color: black;
+    font-weight: 300;
+}
+
+
+.rank-table {
+    width: 10%;
+    font-weight: 100;
+}
+
+.td_bar {
+    width: 50%;
+}
+
+.inbox-tr:hover {
+    color: black;
+    transition: .5s;
+}
+
