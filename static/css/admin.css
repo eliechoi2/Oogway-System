@@ -1,3 +1,4 @@
+/* Navbar Styling */
 div#navbar {
     float: left;
     height: 100vh;
@@ -99,4 +100,36 @@ a.nav-link.sub {
     font-size: .8vw;
     color: #A0AEC0;
     margin-left: 10%;
+}
+
+
+
+/* Header Styling */
+
+button#account_button {
+    background-color: white;
+    color: #708099;
+    font-family: 'Poppins';
+    font-size: .7vw;
+    outline: none;
+    border: none;
+    padding: 0;
+    width: 6%;
+    float: right;
+    margin-right: 3%;
+}
+
+img#account_icon {
+    width: 20%;
+    height: auto;
+}
+
+div.dropdown {
+    float: right;
+    margin-top: 1%;
+}
+
+div#page_title {
+    font-weight: 500;
+    font-size: .9vw;
 }
