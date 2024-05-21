@@ -15,7 +15,7 @@ db = SQLAlchemy()
 
 
 # table for manager information
-class Manager(db.Model):
+class Manager(UserMixin, db.Model):
     __tablename__ = 'MANAGER'
     # student id will be used as PK and a main login identifier
     manager_id = db.Column(db.Integer, primary_key=True)
@@ -23,23 +23,27 @@ class Manager(db.Model):
     manager_lname = db.Column(db.VARCHAR(50), nullable=False)
     manager_email = db.Column(db.VARCHAR(100), nullable=False, unique=True)
     manager_phone = db.Column(db.CHAR(12), nullable=True)
+    manager_password = db.Column(db.VARCHAR(30), nullable=False)
 
     # constructor for Manager object
-    def __init__(self, manager_id, manager_fname, manager_lname, manager_email, manager_phone):
+    def __init__(self, manager_id, manager_fname, manager_lname, manager_email, manager_phone, manager_password):
         self.manager_id = manager_id
         self.manager_fname = manager_fname
         self.manager_lname = manager_lname
         self.manager_email = manager_email
         self.manager_phone = manager_phone
+        self.manager_password = manager_password
 
-    # string representation of created Manager object
+    # flask_login needs a get_id function to provide who is logged in
+    def get_id(self):
+        return self.manager_id
     def __repr__(self):
-        return f'{self.manager_id}: {self.manager_fname} {self.manager_lname}'
+        return f'User ID: {self.manager_id}'
 
 
 
 # table for student information
-class Student(db.Model):
+class Student(UserMixin, db.Model):
     __tablename__ = 'STUDENT'
     # student id will be used as PK and a main login identifier
     student_id = db.Column(db.Integer, primary_key=True)
@@ -47,6 +51,7 @@ class Student(db.Model):
     student_lname = db.Column(db.VARCHAR(50), nullable=False)
     student_email = db.Column(db.VARCHAR(100), nullable=False, unique=True)
     student_phone = db.Column(db.CHAR(12), nullable=True)
+    student_password = db.Column(db.VARCHAR(30), nullable=False)
     # xp leveling information
     xp_current = db.Column(db.Integer, nullable=False)
     xp_needed = db.Column(db.Integer, nullable=False)
@@ -54,16 +59,22 @@ class Student(db.Model):
     student_lvl = db.Column(db.Integer, db.ForeignKey('LEVELS.level'), nullable=False)
 
     # constructor for Student object
-    def __init__(self, student_id, student_fname, student_lname, student_email, student_phone):
+    def __init__(self, student_id, student_fname, student_lname, student_email, student_phone, student_password, xp_current, xp_needed, student_lvl):
         self.student_id = student_id
         self.student_fname = student_fname
         self.student_lname = student_lname
         self.student_email = student_email
         self.student_phone = student_phone
+        self.student_password = student_password
+        self.xp_current = xp_current
+        self.xp_needed = xp_needed
+        self.student_lvl = student_lvl
 
-    # string representation of created Student object
+    # flask_login needs a get_id function to provide who is logged in
+    def get_id(self):
+        return self.student_id
     def __repr__(self):
-        return f'{self.student_id}: {self.student_fname} {self.student_lname}'
+        return f'User ID: {self.student_id}'
 
 
 
@@ -106,7 +117,7 @@ class Collection(db.Model):
 
 
 
-# table for Floors
+# table for floor
 class Floor(db.Model):
     __tablename__ = 'FLOOR'
     floor_id = db.Column(db.CHAR(2), primary_key=True)
