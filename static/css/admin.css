@@ -213,3 +213,13 @@ th {
     font-weight: 500;
     transition: .5s;
 }
+
+/* Admin Student Overall View Styling */
+input#student_search {
+    width: 20%;
+    background-color: #FCFCFC;
+    border: none;
+    font-family: 'Poppins';
+    font-size: .8vw;
+    color: #A0AEC0
+}
