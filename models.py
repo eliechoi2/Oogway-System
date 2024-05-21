@@ -137,5 +137,90 @@ class Location(db.Model):
 
     # string representation
     def __repr__(self):
-        return f'{location_id}: {collection_id} {floor_id}'
+        return f'{self.location_id}: {self.collection_id} {self.floor_id}'
 
+
+
+# table for in house
+class InHouse(db.Model):
+    __tablename__ = 'IN_HOUSE'
+    date = db.Column(db.DATE, primary_key=True, nullable=False)
+    start_time = db.Column(db.DateTime, primary_key=True, nullable=False)
+    end_time = db.Column(db.DateTime, nullable=False)
+    total_retrieved = db.Column(db.Integer, nullable=False)
+    # student_id FK referencing STUDENT table
+    student_id = db.Column(db.Integer, db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    # location_id FK referencing LOCATION table
+    location_id = db.Column(db.CHAR(5), db.ForeignKey('LOCATION.location_id'), nullable=False)
+
+    # creating In House logging object
+    def __init__(self, date, start_time, end_time, total_retrieved, student_id, location_id):
+        self.date = date
+        self.start_time = start_time
+        self.end_time = end_time
+        self.total_retrieved = total_retrieved
+        self.student_id = student_id
+        self.location_id = location_id
+
+    # string representation
+    def __repr__(self):
+        return f'{self.student_id}: {self.date} {self.start_time} {self.end_time} {self.total_retrieved} {self.location_id}'
+
+
+
+# table for shelf reading
+class ShelfReading(db.Model):
+    __tablename__ = 'SHELF_READING'
+    date = db.Column(db.DATE, primary_key=True, nullable=False)
+    start_time = db.Column(db.DateTime, primary_key=True, nullable=False)
+    end_time = db.Column(db.DateTime, nullable=False)
+    shelves_completed = db.Column(db.Integer, nullable=False)
+    start_call = db.Column(db.VARCHAR(20), nullable=False)
+    end_call = db.Column(db.VARCHAR(20), nullable=False)
+    # student_id FK referencing STUDENT table
+    student_id = db.Column(db.Integer, db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    # location_id FK referencing LOCATION table
+    location_id = db.Column(db.CHAR(5), db.ForeignKey('LOCATION.location_id'), nullable=False)
+
+    # creating Shelf Reading logging object
+    def __init__(self, date, start_time, end_time, shelves_completed, start_call, end_call, student_id, location_id):
+        self.date = date
+        self.start_time = start_time
+        self.end_time = end_time
+        self.shelves_completed = shelves_completed
+        self.start_call = start_call
+        self.end_call = end_call
+        self.student_id = student_id
+        self.location_id = location_id
+
+    # string representation
+    def __repr__(self):
+        return (f'{self.student_id}: {self.date} {self.start_time} {self.end_time} '
+                f'{self.shelves_completed} {self.start_call} {self.end_call} {self.location_id}')
+
+
+
+# table for shalving
+class Shelving(db.Model):
+    __tablename__ = 'SHELVING'
+    date = db.Column(db.DATE, primary_key=True, nullable=False)
+    start_time = db.Column(db.DateTime, primary_key=True, nullable=False)
+    end_time = db.Column(db.DateTime, nullable=False)
+    total_shelving = db.Column(db.Integer, nullable=False)
+    # student_id FK referencing STUDENT table
+    student_id = db.Column(db.Integer, db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    # location_id FK referencing LOCATION table
+    location_id = db.Column(db.CHAR(5), db.ForeignKey('LOCATION.location_id'), nullable=False)
+
+    # creating In House logging object
+    def __init__(self, date, start_time, end_time, total_shelving, student_id, location_id):
+        self.date = date
+        self.start_time = start_time
+        self.end_time = end_time
+        self.total_shelving = total_shelving
+        self.student_id = student_id
+        self.location_id = location_id
+
+    # string representation
+    def __repr__(self):
+        return f'{self.student_id}: {self.date} {self.start_time} {self.end_time} {self.total_shelving} {self.location_id}'
