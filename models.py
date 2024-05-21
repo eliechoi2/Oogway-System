@@ -200,7 +200,7 @@ class ShelfReading(db.Model):
 
 
 
-# table for shalving
+# table for shelving
 class Shelving(db.Model):
     __tablename__ = 'SHELVING'
     date = db.Column(db.DATE, primary_key=True, nullable=False)
@@ -212,7 +212,7 @@ class Shelving(db.Model):
     # location_id FK referencing LOCATION table
     location_id = db.Column(db.CHAR(5), db.ForeignKey('LOCATION.location_id'), nullable=False)
 
-    # creating In House logging object
+    # creating shelving logging object
     def __init__(self, date, start_time, end_time, total_shelving, student_id, location_id):
         self.date = date
         self.start_time = start_time
@@ -224,3 +224,125 @@ class Shelving(db.Model):
     # string representation
     def __repr__(self):
         return f'{self.student_id}: {self.date} {self.start_time} {self.end_time} {self.total_shelving} {self.location_id}'
+
+
+
+# table for ILL
+class ILL(db.Model):
+    __tablename__ = 'ILL'
+    date = db.Column(db.DATE, primary_key=True, nullable=False)
+    start_time = db.Column(db.DateTime, primary_key=True, nullable=False)
+    end_time = db.Column(db.DateTime, nullable=False)
+    total_ill = db.Column(db.Integer, nullable=False)
+    # student_id FK referencing STUDENT table
+    student_id = db.Column(db.Integer, db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    # location_id FK referencing LOCATION table
+    location_id = db.Column(db.CHAR(5), db.ForeignKey('LOCATION.location_id'), nullable=False)
+
+    # creating In House logging object
+    def __init__(self, date, start_time, end_time, total_ill, student_id, location_id):
+        self.date = date
+        self.start_time = start_time
+        self.end_time = end_time
+        self.total_ill = total_ill
+        self.student_id = student_id
+        self.location_id = location_id
+
+    # string representation
+    def __repr__(self):
+        return f'{self.student_id}: {self.date} {self.start_time} {self.end_time} {self.total_ill} {self.location_id}'
+
+
+
+# table for rm list
+class RmList(db.Model):
+    __tablename__ = 'RM_LIST'
+    date = db.Column(db.DATE, primary_key=True, nullable=False)
+    start_time = db.Column(db.DateTime, primary_key=True, nullable=False)
+    end_time = db.Column(db.DateTime, nullable=False)
+    total_rm = db.Column(db.Integer, nullable=False)
+    # student_id FK referencing STUDENT table
+    student_id = db.Column(db.Integer, db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    # location_id FK referencing LOCATION table
+    location_id = db.Column(db.CHAR(5), db.ForeignKey('LOCATION.location_id'), nullable=False)
+
+    # creating rm logging object
+    def __init__(self, date, start_time, end_time, total_rm, student_id, location_id):
+        self.date = date
+        self.start_time = start_time
+        self.end_time = end_time
+        self.total_rm = total_rm
+        self.student_id = student_id
+        self.location_id = location_id
+
+    # string representation
+    def __repr__(self):
+        return f'{self.student_id}: {self.date} {self.start_time} {self.end_time} {self.total_rm} {self.location_id}'
+
+
+
+# table for hold list
+class HoldList(db.Model):
+    __tablename__ = 'HOLD_LIST'
+    date = db.Column(db.DATE, primary_key=True, nullable=False)
+    start_time = db.Column(db.DateTime, primary_key=True, nullable=False)
+    end_time = db.Column(db.DateTime, nullable=False)
+    total_holds = db.Column(db.Integer, nullable=False)
+    # student_id FK referencing STUDENT table
+    student_id = db.Column(db.Integer, db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    # location_id FK referencing LOCATION table
+    location_id = db.Column(db.CHAR(5), db.ForeignKey('LOCATION.location_id'), nullable=False)
+
+    # creating hold list logging object
+    def __init__(self, date, start_time, end_time, total_holds, student_id, location_id):
+        self.date = date
+        self.start_time = start_time
+        self.end_time = end_time
+        self.total_holds = total_holds
+        self.student_id = student_id
+        self.location_id = location_id
+
+    # string representation
+    def __repr__(self):
+        return f'{self.student_id}: {self.date} {self.start_time} {self.end_time} {self.total_holds} {self.location_id}'
+
+
+
+# table for problem list
+class ProblemList(db.Model):
+    __tablename__ = 'PROBLEM_LIST'
+    problem_id = db.Column(db.CHAR(5), primary_key=True, nullable=False)
+    problem_description = db.Column(db.VARCHAR(100), nullable=False)
+
+    # creating problem list object
+    def __init__(self, problem_id, problem_description):
+        self.problem_id = problem_id
+        self.problem_description = problem_description
+
+    # string representation
+    def __repr__(self):
+        return f'{self.problem_id}: {self.problem_description}'
+
+
+
+# table for problem logging
+class Problem(db.Model):
+    __tablename__ = 'PROBLEM'
+    student_id = db.Column(db.Integer, db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    date = db.Column(db.DATE, primary_key=True, nullable=False)
+    call_no = db.Column(db.VARCHAR, primary_key=True, nullable=False)
+    problem_id = db.Column(db.CHAR(5), db.ForeignKey('PROBLEM_LIST.problem_id'), nullable=True)
+    comments = db.Column(db.VARCHAR(100), nullable=True)
+
+    # creating problem object
+    def __init__(self, student_id, date, call_no, problem_id, comments):
+        self.student_id = student_id
+        self.date = date
+        self.call_no = call_no
+        self.problem_id = problem_id
+        self.comments = comments
+
+    # string representation
+    def __repr__(self):
+        return f'{self.student_id}: {self.date} {self.call_no} {self.problem_id} {self.comments}'
+
