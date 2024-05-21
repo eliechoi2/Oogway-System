@@ -10,9 +10,13 @@
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 </head>
 <body>
+
+    <!-- Navbar -->
     <div class="col-2 navbar-content p-4" id="navbar">
         <div class="row justify-content-center" id="title">MCKELDIN CMR</div>
         <hr>
+
+        <!-- Navbar Items -->
         <ul class="navbar-ul">
             <li class="navbar-li active">
                 <a href="" class="image-container">
@@ -20,10 +24,9 @@
                     <img class="back" src="static\images\home-white.png" alt="Second Image">
                     <p class="navbar-item">Dashboard</p>
                 </a>
-                <!-- <a href="">Dashboard</a> -->
             </li>
             <li class="navbar-li">
-                <a class="image-container" href="">
+                <a class="image-container" href="/admin-overall-view">
                     <img class="front" src="static\images\student-gray.png"alt="First Image">
                     <img class="back" src="static\images\student-white.png" alt="Second Image">
                     <p class="navbar-item">Students</p>
@@ -35,6 +38,8 @@
                     <img class="back" src="static\images\floor-white.png" alt="Second Image">
                     <p class="navbar-item">Shelving</p>
                 </a>
+
+                <!-- Shelving Submenu -->
                 <ul class="collapse nav flex-column" id="submenu2" data-bs-parent="#menu">
                     <li class="w-100 mb-3">
                         <a href="#" class="nav-link sub">3rd Floor</a>
@@ -76,6 +81,7 @@
         </ul>
     </div>
 
+    <!-- Header -->
     <div id="col page-content">
         <div class="row pt-2">
             <div class="dropdown">
@@ -89,10 +95,12 @@
               </div>
             
         </div>
+        <!-- Child Page Name -->
         <div class="row ps-4" id="page_title">
             {%block child_content%}
             {%endblock%}
         </div>
+        <!-- Child Content -->
         <div class="row ps-4">
             {%block page_content%}
             {%endblock%}
