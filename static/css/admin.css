@@ -215,11 +215,55 @@ th {
 }
 
 /* Admin Student Overall View Styling */
-input#student_search {
+input#search_bar {
     width: 20%;
     background-color: #FCFCFC;
     border: none;
     font-family: 'Poppins';
     font-size: .8vw;
-    color: #A0AEC0
+    color: #707683;
+    display: inline-block;
+    margin-right: 1%;
+}
+
+
+button#search_button {
+    width: 10%;
+    font-family: 'Poppins';
+    font-size: .8vw;
+    color: #707683;
+    display: inline-block;
+    border-color: black;
+    display: inline-block;
+}
+
+button#search_button:hover {
+    background-color: black;
+    border-color: black;
+    color: white;
+}
+
+#switch_view_button {
+    border-color: #707683;
+    border-style: solid;
+    border-width: thin;
+    border-radius: 5px;
+    padding-left: 1%;
+    padding-right: 1%;
+    padding-top: .5%;
+    padding-bottom: .5%;
+    color: #707683;
+    background-color: white;
+    width: 10%;
+    font-size: .8vw;
+    display: inline-block;
+    font-family: 'Poppins';
+}
+
+tr#student_list_view_row {
+    box-shadow: 2px 2px 5px rgb(244, 244, 244);
+    padding-top: 10%;
+    border-color: rgb(244, 244, 244);
+    border-style: solid;
+    border-width: thin;
 }
