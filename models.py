@@ -46,7 +46,7 @@ class Manager(UserMixin, db.Model):
 class Student(UserMixin, db.Model):
     __tablename__ = 'STUDENT'
     # student id will be used as PK and a main login identifier
-    student_id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.CHAR(10), primary_key=True)
     student_fname = db.Column(db.VARCHAR(50), nullable=False)
     student_lname = db.Column(db.VARCHAR(50), nullable=False)
     student_email = db.Column(db.VARCHAR(100), nullable=False, unique=True)
@@ -160,7 +160,7 @@ class InHouse(db.Model):
     end_time = db.Column(db.DateTime, nullable=False)
     total_retrieved = db.Column(db.Integer, nullable=False)
     # student_id FK referencing STUDENT table
-    student_id = db.Column(db.Integer, db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    student_id = db.Column(db.CHAR(10), db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
     # location_id FK referencing LOCATION table
     location_id = db.Column(db.CHAR(5), db.ForeignKey('LOCATION.location_id'), nullable=False)
 
@@ -189,7 +189,7 @@ class ShelfReading(db.Model):
     start_call = db.Column(db.VARCHAR(20), nullable=False)
     end_call = db.Column(db.VARCHAR(20), nullable=False)
     # student_id FK referencing STUDENT table
-    student_id = db.Column(db.Integer, db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    student_id = db.Column(db.CHAR(10), db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
     # location_id FK referencing LOCATION table
     location_id = db.Column(db.CHAR(5), db.ForeignKey('LOCATION.location_id'), nullable=False)
 
@@ -219,7 +219,7 @@ class Shelving(db.Model):
     end_time = db.Column(db.DateTime, nullable=False)
     total_shelving = db.Column(db.Integer, nullable=False)
     # student_id FK referencing STUDENT table
-    student_id = db.Column(db.Integer, db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    student_id = db.Column(db.CHAR(10), db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
     # location_id FK referencing LOCATION table
     location_id = db.Column(db.CHAR(5), db.ForeignKey('LOCATION.location_id'), nullable=False)
 
@@ -246,7 +246,7 @@ class ILL(db.Model):
     end_time = db.Column(db.DateTime, nullable=False)
     total_ill = db.Column(db.Integer, nullable=False)
     # student_id FK referencing STUDENT table
-    student_id = db.Column(db.Integer, db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    student_id = db.Column(db.CHAR(10), db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
     # location_id FK referencing LOCATION table
     location_id = db.Column(db.CHAR(5), db.ForeignKey('LOCATION.location_id'), nullable=False)
 
@@ -273,7 +273,7 @@ class RmList(db.Model):
     end_time = db.Column(db.DateTime, nullable=False)
     total_rm = db.Column(db.Integer, nullable=False)
     # student_id FK referencing STUDENT table
-    student_id = db.Column(db.Integer, db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    student_id = db.Column(db.CHAR(10), db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
     # location_id FK referencing LOCATION table
     location_id = db.Column(db.CHAR(5), db.ForeignKey('LOCATION.location_id'), nullable=False)
 
@@ -300,7 +300,7 @@ class HoldList(db.Model):
     end_time = db.Column(db.DateTime, nullable=False)
     total_holds = db.Column(db.Integer, nullable=False)
     # student_id FK referencing STUDENT table
-    student_id = db.Column(db.Integer, db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    student_id = db.Column(db.CHAR(10), db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
     # location_id FK referencing LOCATION table
     location_id = db.Column(db.CHAR(5), db.ForeignKey('LOCATION.location_id'), nullable=False)
 
@@ -339,7 +339,7 @@ class ProblemList(db.Model):
 # table for problem logging
 class Problem(db.Model):
     __tablename__ = 'PROBLEM'
-    student_id = db.Column(db.Integer, db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    student_id = db.Column(db.CHAR(10), db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
     date = db.Column(db.DATE, primary_key=True, nullable=False)
     call_no = db.Column(db.VARCHAR, primary_key=True, nullable=False)
     problem_id = db.Column(db.CHAR(5), db.ForeignKey('PROBLEM_LIST.problem_id'), nullable=True)
