@@ -9,8 +9,6 @@
 
 # importing packages
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import CheckConstraint
-#from flask_login import UserMixin
 db = SQLAlchemy()
 
 
@@ -35,10 +33,10 @@ class Manager(db.Model):
         self.manager_password = manager_password
 
     # flask_login needs a get_id function to provide who is logged in
-    def get_id(self):
-        return self.manager_id
+    # def get_id(self):
+    #     return self.manager_id
     def __repr__(self):
-        return f'User ID: {self.manager_id}'
+        return f"User ID: {self.manager_fname} {self.manager_lname}"
 
 
 
