@@ -15,9 +15,13 @@ def admin_dashboard():
 def admin_student_list_view():
     return render_template('/admin-student-list-view.html')
 
-@app.route('/admin-overall-view')
+@app.route('/admin-student-overall-view')
 def admin_overall_view():
-    return render_template('/admin-overall-view.html')
+    return render_template('/admin-student-overall-view.html')
+
+@app.route('/admin-student')
+def admin_student():
+    return render_template('/admin-student.html')
 
 #Student Routes
 @app.route('/home')

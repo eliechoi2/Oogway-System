@@ -1,0 +1,54 @@
+{%extends 'admin-navbar-base.html'%}
+
+{%block page_title%}
+Students (List View)
+{%endblock%}
+
+{%block child_content%}
+<p>Students (List View)</p>
+{%endblock%}
+
+{%block page_content%}
+<div class="container">
+    <div class="row mt-2">
+        <form class="col-10 form-inline my-2 my-lg-0" id="search_form">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search_bar">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="search_button">Search</button>
+        </form>
+        <a class="col-1" href="/admin-student-overall-view" id="switch_view_button">Switch View</a>
+    </div>
+    <div class="row ps-2 pe-5">
+        <table class="table mt-4 table-hover mytable" id="student_list_view_table">
+            <thead>
+              <tr>
+                <th scope="col">Rank</th>
+                <th scope="col">Student Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Username</th>
+                <th scope="col">Password</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="clickable-row" id="student_list_view_row" data-href="/admin-student">
+
+                <!-- Input data from database here -->
+
+                <td class="ml-2">1</td>
+                <td>Lindsey Shroud</td>
+                <td>Email</td>
+                <td>@Username</td>
+                <td>Pasword</td>
+                <td>Status</td>
+
+                <!-- End -->
+
+              </tr>
+            </tbody>
+          </table>
+    </div>
+</div>
+
+
+
+{%endblock%}
