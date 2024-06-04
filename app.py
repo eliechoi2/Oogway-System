@@ -23,6 +23,10 @@ def admin_overall_view():
 def admin_student():
     return render_template('/admin-student.html')
 
+@app.route('/admin-floor')
+def admin_floor():
+    return render_template('/admin-floor.html')
+
 #Student Routes
 @app.route('/home')
 def home():
