@@ -13,31 +13,51 @@
 
     <!-- Navbar -->
     <div class="col-2 navbar-content p-4" id="navbar">
-        <div class="row justify-content-center" id="title">MCKELDIN CMR</div>
+        <a href="/admin-dashboard" class="row justify-content-center" id="title">MCKELDIN CMR</a>
         <hr>
 
         <!-- Navbar Items -->
         <ul class="navbar-ul">
             <li class="navbar-li active">
-                <a href="" class="image-container">
+                <a href="/admin-dashboard" class="image-container">
                     <img class="front" src="static\images\home-gray.png"alt="First Image">
                     <img class="back" src="static\images\home-white.png" alt="Second Image">
                     <p class="navbar-item">Dashboard</p>
                 </a>
             </li>
             <li class="navbar-li">
-                <a class="image-container" href="/admin-overall-view">
+                <a class="image-container" href="/admin-student-overall-view">
                     <img class="front" src="static\images\student-gray.png"alt="First Image">
                     <img class="back" src="static\images\student-white.png" alt="Second Image">
                     <p class="navbar-item">Students</p>
                 </a>
             </li>
             <li class="navbar-li">
-                <a href="#submenu2" data-bs-toggle="collapse" class="image-container">
-                    <img class="front" src="static\images\floor-gray.png"alt="First Image">
-                    <img class="back" src="static\images\floor-white.png" alt="Second Image">
-                    <p class="navbar-item">Shelving</p>
-                </a>
+                <div class="accordion" id="accordion-shelving">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header">
+                        <div class="image-container">
+                            <button class="accordion-button collapsed navbar-item" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                <img class="front" src="static\images\floor-gray.png"alt="First Image">
+                                <img class="back" src="static\images\floor-white.png" alt="Second Image">
+                                Shelving
+                            </button>
+                        </div>
+                      </h2>
+                      <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordion-shelving">
+                        <div class="accordion-body">
+                          <ul class="accordion-list">
+                            <li><a href="">3rd Floor</a></li>
+                            <li><a href="">5th Floor</a></li>
+                            <li><a href="">6th Floor</a></li>
+                            <li><a href="">7th Floor</a></li>
+                            <li><a href="">Others SR</a></li>
+                            <li><a href="">Stacks PS Center</a></li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                </div>
 
                 <!-- Shelving Submenu -->
                 <ul class="collapse nav flex-column" id="submenu2" data-bs-parent="#menu">

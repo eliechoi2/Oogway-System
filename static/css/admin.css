@@ -96,13 +96,44 @@ div#navbar {
     color: #A0AEC0;
 }
 
-a.nav-link.sub {
-    font-size: .8vw;
-    color: #A0AEC0;
-    margin-left: 10%;
+button#accordion-button {
+    font-size: .5vw;
+    border: none;
 }
 
+.accordion .card-header .btn {
+    border: none;
+  }
 
+.accordion-list>li {
+    list-style: none;
+    margin-bottom: 20%;
+    margin-top: 20%;
+    font-size: .8vw;
+}
+
+.accordion-list>li>a:hover {
+    color: black;
+    transition: .5s;
+    border-bottom-style: solid;
+    border-bottom-color:#00FFD1;
+    border-bottom-width: thick;
+}
+
+#accordion-shelving .accordion-button {
+    border: none;
+    width: 100%; 
+}
+
+#accordion-shelving .accordion-button:focus {
+    outline: none; 
+    box-shadow: none;
+    background-color: white;
+}
+
+#accordion-shelving .accordion-item {
+    border: none;
+}
 
 /* Header Styling */
 
@@ -214,12 +245,106 @@ th {
     transition: .5s;
 }
 
-/* Admin Student Overall View Styling */
-input#student_search {
+
+/* Admin Student List View Styling */
+input#search_bar {
     width: 20%;
     background-color: #FCFCFC;
     border: none;
     font-family: 'Poppins';
     font-size: .8vw;
-    color: #A0AEC0
+    color: #707683;
+    display: inline-block;
+    margin-right: 1%;
+}
+
+
+button#search_button {
+    width: 10%;
+    font-family: 'Poppins';
+    font-size: .8vw;
+    color: #707683;
+    display: inline-block;
+    border-color: black;
+    display: inline-block;
+}
+
+button#search_button:hover {
+    background-color: black;
+    border-color: black;
+    color: white;
+}
+
+#switch_view_button {
+    border-color: #707683;
+    border-style: solid;
+    border-width: thin;
+    border-radius: 5px;
+    padding-left: 1%;
+    padding-right: 1%;
+    padding-top: .5%;
+    padding-bottom: .5%;
+    color: #707683;
+    background-color: white;
+    width: 10%;
+    font-size: .8vw;
+    display: inline-block;
+    font-family: 'Poppins';
+    text-align: center;
+}
+
+#switch_view_button:hover {
+    background-color: black;
+    color: white;
+    transition: .5s;
+}
+
+tr#student_list_view_row {
+    box-shadow: 2px 2px 5px rgb(244, 244, 244);
+    border-color: rgb(244, 244, 244);
+    border-style: solid;
+    border-width: thin;
+}
+
+.mytable>tbody>tr>td {
+    padding-top: 1.5%;
+    padding-bottom: 1.5%;
+    color: black;
+}
+
+
+/* Admin Student Overall View Styling */
+.student_overall_view_number {
+    text-align: center;
+}
+
+tr#student_overall_view_row {
+    border-top-style: solid;
+    border-top-width: thin;
+    border-top-color: #E2E8F0;
+    border-bottom-style: solid;
+    border-bottom-width: thin;
+    border-bottom-color: #E2E8F0;
+}
+
+/* Admin Individual Student Styling */
+
+.student-table>tbody>tr>td {
+    padding-top: 1.5%;
+    padding-bottom: 1.5%;
+    color: #708099;
+}
+
+.student-name {
+    font-size: 1vw;
+    font-family: "Poppins";
+}
+
+.individual-student-table-row {
+    border-top-style: solid;
+    border-top-width: thin;
+    border-top-color: #E2E8F0;
+    border-bottom-style: solid;
+    border-bottom-width: thin;
+    border-bottom-color: #E2E8F0;
 }
