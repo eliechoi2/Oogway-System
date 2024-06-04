@@ -3,6 +3,8 @@ from flask import session
 from app import app, db
 from models import *
 import datetime as dt
+# from werkzeug.security import generate_password_hash
+# import numpy as np
 
 with app.app_context():
     db.drop_all()
@@ -33,6 +35,13 @@ with app.app_context():
 
     # test variables for manager table
 
+    # manager = [1,'Man', 'Ager', 'manager@gmail.com', '2934935483', 'man_password']
+    manager = [
+        {'manager_id': '1', 'manager_fname': 'Robert', 'manager_lname':'Smith', 'major_id':3,
+            'manager_email': dt.datetime(2007, 6, 1), 'manager_phone':1, 'manager_password': 'wsfjl'}
+    ]
+
+
     # print(manager[0], 'inserted into table')
     # in_manager = Manager(
     #     manager_id=manager[0],
@@ -51,4 +60,65 @@ with app.app_context():
         db.session.add(a_manager)
         db.session.commit()
 
+    # in_manager = Manager(manager)
+    # db.session.add(in_manager)
+    # db.session.commit()
 
+
+    # test variables for levels table ( will likely translate to final)
+
+    # levels = [
+    #     [1, 100, 'Bronze I'],
+    #     [2, 150, 'Bronze II'],
+    #     [3, 200, 'Bronze III']
+    # ]
+
+    # for i in levels:
+    #     print(i[2], 'inserted into table')
+    #     in_levels = Levels(
+    #         level = i[0],
+    #         xp_total_needed = i[1],
+    #         level_id = i[2]
+    #     )
+
+    #     db.session.add(in_levels)
+    #     db.session.commit()
+
+    # # test variables for collection table
+    # collections = [
+    #     ['st_PR', 'Stack', 'PR'],
+    #     ['st_PS', 'Stack', 'PS']
+    # ]
+
+    # for i in collections:
+    #     in_collection = Collection(i)
+
+    #     db.session.add(in_collection)
+    #     db.session.commit()
+
+    # def test_var(table, test_values):
+    #     '''for inputting test variables'''
+    #     for i in test_values:
+    #         in_table = table(i)
+    #         db.session.add(in_table)
+    #         db.session.commit()
+
+    # # creating test variables for floor table
+    # floors = ['01', '02', '03', '04', '05', '06', '07']
+    # in_floor = Floor(floors)
+    # db.session.add(in_floor)
+    # db.session.commit()
+
+    # # creating test variables for location table
+    # location = [
+    #     ['7stPR', 'st_PR', '07'],
+    #     ['7stPS', 'st_PS', '07']
+    # ]
+    # test_var(Location, location)
+
+    # # creating test variables for in house table
+    # in_house = [
+    #     ['2024-01-01', '11:00:00', '13:00:00', 10, '1234567890', '7stPR'],
+    #     ['2024-01-02', '5:00:00', '7:00:00', 5, '1239997890', '7stPS']
+    # ]
+    # test_var(InHouse, in_house)
