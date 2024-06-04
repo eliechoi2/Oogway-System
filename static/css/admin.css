@@ -11,7 +11,7 @@ div#navbar {
     margin-bottom: 10%;
 }
 
-.navbar-ul {
+.nav.flex-column {
     list-style: none;
     font-family: 'Poppins';
     padding: 0;
