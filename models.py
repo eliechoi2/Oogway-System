@@ -10,12 +10,12 @@
 # importing packages
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import CheckConstraint
-from flask_login import UserMixin
+#from flask_login import UserMixin
 db = SQLAlchemy()
 
 
 # table for manager information
-class Manager(UserMixin, db.Model):
+class Manager(db.Model):
     __tablename__ = 'MANAGER'
     # student id will be used as PK and a main login identifier
     manager_id = db.Column(db.Integer, primary_key=True)
@@ -43,7 +43,7 @@ class Manager(UserMixin, db.Model):
 
 
 # table for student information
-class Student(UserMixin, db.Model):
+class Student(db.Model):
     __tablename__ = 'STUDENT'
     # student id will be used as PK and a main login identifier
     student_id = db.Column(db.CHAR(10), primary_key=True)
