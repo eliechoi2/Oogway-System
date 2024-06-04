@@ -9,8 +9,6 @@
 
 # importing packages
 from flask_sqlalchemy import SQLAlchemy
-# from sqlalchemy import CheckConstraint
-# from flask_login import UserMixin
 db = SQLAlchemy()
 
 

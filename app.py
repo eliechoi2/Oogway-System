@@ -1,17 +1,4 @@
 from flask import Flask, redirect, render_template, url_for, request
-app = Flask(__name__, template_folder='template') 
-from models import db, Student, Manager
-import os
-
-basedir = os.path.abspath(os.path.dirname(__file__))
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'oogway.db')
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# app.config['SECRET_KEY'] = 'beyond_course_scope'
-db.init_app(app)
-
-
 
 #Authentication Routes
 @app.route('/')
