@@ -346,3 +346,99 @@ tr#student_overall_view_row {
     border-bottom-width: thin;
     border-bottom-color: #E2E8F0;
 }
+
+/* Admin Floor Base Styling */
+#stack_menu {
+    width: 80vw;
+    height: 80vh;
+    border: none;
+    position: fixed;
+    
+  }
+
+
+.dropdown-menu .container .row {
+    padding: 5%;
+}
+
+.dropdown-menu .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+div#stack-dropdown-button {
+    background-color: white;
+}
+
+.custom-btn-secondary {
+    background-color: #F2F2F2;
+    color: black;
+    border-color: #DBDBDB;
+    border-style: solid;
+    border-width: thin;
+    font-family: "Poppins";
+    font-size: .8vw;
+    border-bottom: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.custom-dropdown-toggle::after {
+    display: none;
+}
+
+.custom-btn-secondary:active {
+    background-color: white;
+    color: black;
+}
+
+.custom-btn-secondary:hover {
+    background-color: white;
+    color: black;
+    border-color: #00FFD1;
+}
+
+.clicked {
+    background-color: white;
+    color: black;
+    border-color: #00FFD1;
+}
+
+.stack-list>ul>li {
+    margin-right: 2%;
+}
+
+.btn-secondary:focus {
+    outline: none;
+}
+
+#search_bar_stack {
+    width: 60%;
+    background-color: #FCFCFC;
+    border: none;
+    font-family: 'Poppins';
+    font-size: .8vw;
+    color: #707683;
+    display: inline-block;
+    margin-right: 1%;
+}
+
+#search_button_stack {
+    width: 30%;
+    background-color: black;
+    border: none;
+    font-family: 'Poppins';
+    font-size: .8vw;
+    color: white;
+    display: inline-block;
+    margin-right: 1%;
+}
+
+#search_form_stack {
+    width: 100%;
+}
+#stack_search_li {
+    padding: 0;
+}
