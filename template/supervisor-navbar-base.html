@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -5,30 +6,37 @@
     <title>{%block page_title%}{%endblock%}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href='https://fonts.googleapis.com/css?family=League Spartan' rel='stylesheet'>
-    <link rel="stylesheet" href="/static/css/admin.css">
+    <link rel="stylesheet" href="/static/css/supervisor.css">
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 </head>
 <body>
 
     <!-- Navbar -->
     <div class="col-2 navbar-content p-4" id="navbar">
-        <a href="/admin-dashboard" class="row justify-content-center" id="title">MCKELDIN CMR</a>
+        <a href="/supervisor-dashboard" class="row justify-content-center" id="title">MCKELDIN CMR</a>
         <hr>
 
         <!-- Navbar Items -->
         <ul class="nav flex-column">
             <li class="navbar-li active">
-                <a href="/admin-dashboard" class="image-container">
+                <a href="/supervisor-dashboard" class="image-container">
                     <img class="front" src="static\images\home-gray.png"alt="First Image">
-                    <img cl ass="back" src="static\images\home-white.png" alt="Second Image">
+                    <img class="back" src="static\images\home-white.png" alt="Second Image">
                     <p class="navbar-item">Dashboard</p>
                 </a>
             </li>
             <li class="navbar-li">
-                <a class="image-container" href="/admin-student-overall-view">
+                <a class="image-container" href="/supervisor-student-overall-view">
                     <img class="front" src="static\images\student-gray.png"alt="First Image">
                     <img class="back" src="static\images\student-white.png" alt="Second Image">
                     <p class="navbar-item">Students</p>
+                </a>
+            </li>
+            <li class="navbar-li">
+                <a class="image-container" href="/supervisor-input-data">
+                    <img class="front" src="static\images\data-input-gray.png"alt="First Image">
+                    <img class="back" src="static\images\data-input-white.png" alt="Second Image">
+                    <p class="navbar-item">Input Data</p>
                 </a>
             </li>
             <li class="navbar-li">
@@ -46,7 +54,7 @@
                       <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordion-shelving">
                         <div class="accordion-body">
                           <ul class="accordion-list">
-                            <li><a href="/admin-floor">3rd Floor</a></li>
+                            <li><a href="/supervisor-floor">3rd Floor</a></li>
                             <li><a href="">5th Floor</a></li>
                             <li><a href="">6th Floor</a></li>
                             <li><a href="">7th Floor</a></li>

@@ -1,0 +1,47 @@
+body {
+    margin: 0;
+}
+#navbar>div>div>ul>li {
+    list-style: none;
+}
+
+#navbar>div>div>ul>li>a {
+    color:lightgray;
+    text-decoration: none;
+    font-family: "Poppins";
+}
+
+#navbar>div>div>ul>li>a:hover {
+    color:black;
+    transition: .5s;
+}
+
+#navbar>div>div>ul>li>a>h4 {
+    font-weight: 200;
+}
+
+#navbar>div>a {
+    color: gray;
+    text-decoration: none;
+    font-family: "Poppins";
+}
+
+#navbar {
+    background-color: white;
+    width: 15%;
+    padding-top: 2%;
+    box-shadow: 2px 2px 5px 2px rgb(223, 223, 223);
+    height: 100vh;
+}
+
+.navbar-brand {
+    display: block;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    color: white;
+    font-family: "Poppins";
+    font-weight: normal;
+    font-size: 120%;
+    text-decoration: none;
+}

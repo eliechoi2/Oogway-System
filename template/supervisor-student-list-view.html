@@ -1,0 +1,85 @@
+{%extends 'supervisor-navbar-base.html'%}
+
+{%block page_title%}
+Students (List View)
+{%endblock%}
+
+{%block child_content%}
+<p>Students (List View)</p>
+{%endblock%}
+
+{%block page_content%}
+<div class="container">
+    <div class="row mt-2">
+      <div class="supervisor-student-list-search">
+        <form class="col-10 form-inline my-2 my-lg-0" id="search_form">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search_bar">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="search_button">Search</button>
+        </form>
+      </div>
+      <div class="supervisor-student-list-buttons">
+        {% if current_user.role in ['supervisor'] %}
+            <a href="{{ url_for('student_create') }}" id="switch_view_button" >Add Student</a>
+        {% endif %}
+        <a href="/supervisor-student-overall-view" id="switch_view_button">Switch View</a>
+      </div>
+        
+    </div>
+    <div class="row ps-2 pe-5 flex-grow-1">
+                <table class="table mt-4 table-hover mytable" id="student_list_view_table">
+                  <thead>
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">First Name</th>
+                      <th scope="col">Last Name</th>
+                      <th scope="col">Email</th>
+                      <th scope="col">Username</th>
+                      <th scope="col">Password</th>
+                      {% if current_user.role in ['ADMIN', 'supervisor'] %}
+                      <th>Actions</th>
+                      {% endif %}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for each_student in students %}
+                    <tr class="clickable-row" id="student_overall_view_row" data-href="/supervisor-student">
+                        <td class="student_overall_view_number">{{ each_student['student_id'] }}</td>
+                        <td class="student_overall_view_number">{{ each_student['student_fname'] }}</td>
+                        <td class="student_overall_view_number">{{ each_student['student_lname'] }}</td>
+                        <td class="student_overall_view_number">{{ each_student['student_email'] }}</td>
+                        <td class="student_overall_view_number">{{ each_student['student_username'] }}</td>
+                        <td class="student_overall_view_number">{{ each_student['student_password'] }}</td>
+                        {% if current_user.role in ['ADMIN', 'supervisor'] %}
+                        <td>
+                            <a href="{{ url_for('student_edit', student_id=each_student['student_id']) }}" class="btn btn-secondary" role="button">Edit</a>
+                            {% if current_user.role in ['ADMIN'] %}
+                            <a href="{{ url_for('student_delete', student_id=each_student['student_id']) }}" class="btn btn-secondary" role="button">Delete</a>
+                            {% endif %}
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+
+              </tr>
+            </tbody>
+          </table>
+    </div>
+</div>
+
+<div id="student-list-pagination-div" class="d-flex justify-content-center mt-4"> 
+  <nav id="student-list-pagination" aria-label="Page navigation example">
+    <ul class="pagination">
+      <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+      <li class="page-item"><a class="page-link" href="#">1</a></li>
+      <li class="page-item"><a class="page-link" href="#">2</a></li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <li class="page-item"><a class="page-link" href="#">Next</a></li>
+    </ul>
+  </nav>
+</div>
+
+
+
+{%endblock%}
