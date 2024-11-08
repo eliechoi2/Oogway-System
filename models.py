@@ -75,7 +75,7 @@ class Student(db.Model):
     
 class Student_Data(db.Model):
     __tablename__ = 'STUDENT_DATA'
-    data_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    data_id = db.Column(db.Integer, primary_key=True, autoincrement=True)   
     student_id = db.Column(db.Integer, db.ForeignKey("STUDENT.student_id", ondelete="CASCADE"), nullable=False)
     task_id = db.Column(db.Integer, db.ForeignKey("TASKS.task_id"), nullable=False)  # New field for task association
     total_shelfreads = db.Column(db.Integer, nullable=False)
@@ -201,7 +201,7 @@ class Location(db.Model):
 class Tasks(db.Model):
     __tablename__ = 'TASKS'
     task_id = db.Column(db.Integer, primary_key=True, nullable=False)
-    task = db.Column(db.VARCHAR(50), nullable=False)
+    task = db.Column(db.String(50), nullable=False)
 
     def __init__(self, task_id, task):
         self.task_id = task_id
@@ -250,10 +250,10 @@ class ShelfReading(db.Model):
     # student_id FK referencing STUDENT table
     student_id = db.Column(db.CHAR(10), db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
     # location_id FK referencing LOCATION table
-    location_id = db.Column(db.CHAR(5), db.ForeignKey('LOCATION.location_id'), nullable=False)
+    floor_id = db.Column(db.CHAR(5), db.ForeignKey('FLOOR.floor_id'), nullable=False)
 
     # creating Shelf Reading logging object
-    def __init__(self, date, start_time, end_time, shelves_completed, start_call, end_call, student_id, location_id):
+    def __init__(self, date, start_time, end_time, shelves_completed, start_call, end_call, student_id, floor_id):
         self.date = date
         self.start_time = start_time
         self.end_time = end_time
@@ -261,39 +261,79 @@ class ShelfReading(db.Model):
         self.start_call = start_call
         self.end_call = end_call
         self.student_id = student_id
-        self.location_id = location_id
+        self.floor_id = floor_id
 
     # string representation
     def __repr__(self):
         return (f'{self.student_id}: {self.date} {self.start_time} {self.end_time} '
-                f'{self.shelves_completed} {self.start_call} {self.end_call} {self.location_id}')
+                f'{self.shelves_completed} {self.start_call} {self.end_call} {self.floor_id}')
 
 
 
 # table for shelving
+# class Shelving(db.Model):
+#     __tablename__ = 'SHELVING'
+#     date = db.Column(db.DATE, primary_key=True, nullable=False)
+#     start_time = db.Column(db.DateTime, primary_key=True, nullable=False)
+#     end_time = db.Column(db.DateTime, nullable=False)
+#     total_shelving = db.Column(db.Integer, nullable=False)
+#     # student_id FK referencing STUDENT table
+#     student_id = db.Column(db.CHAR(10), db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+#     # location_id FK referencing LOCATION table
+#     floor_id = db.Column(db.CHAR(5), db.ForeignKey('FLOOR.floor_id'), nullable=False)
+#     start_call = db.Column(db.VARCHAR(20), nullable=False)
+#     end_call = db.Column(db.VARCHAR(20), nullable=False)
+#     collection_id = db.Column(db.CHAR(5), db.ForeignKey('COLLECTIONS.collection_id'), nullable=False)
+
+#     # creating shelving logging object
+#     def __init__(self, date, start_time, end_time, total_shelving, student_id, floor_id, start_call, end_call, collection_id):
+#         self.date = date
+#         self.start_time = start_time
+#         self.end_time = end_time
+#         self.total_shelving = total_shelving
+#         self.student_id = student_id
+#         self.floor_id = floor_id
+#         self.start_call = start_call
+#         self.end_call = end_call
+#         self.collection_id = collection_id
+
+#     # string representation
+#     def __repr__(self):
+#         return f'{self.student_id}: {self.date} {self.start_time} {self.end_time} {self.total_shelving} {self.floor_id} {self.collection_id}'
+
 class Shelving(db.Model):
     __tablename__ = 'SHELVING'
     date = db.Column(db.DATE, primary_key=True, nullable=False)
     start_time = db.Column(db.DateTime, primary_key=True, nullable=False)
     end_time = db.Column(db.DateTime, nullable=False)
     total_shelving = db.Column(db.Integer, nullable=False)
+    
     # student_id FK referencing STUDENT table
     student_id = db.Column(db.CHAR(10), db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    
     # location_id FK referencing LOCATION table
-    location_id = db.Column(db.CHAR(5), db.ForeignKey('LOCATION.location_id'), nullable=False)
+    floor_id = db.Column(db.CHAR(5), db.ForeignKey('FLOOR.floor_id'), nullable=False)
+    
+    start_call = db.Column(db.VARCHAR(20), nullable=False)
+    end_call = db.Column(db.VARCHAR(20), nullable=False)
+    collection_id = db.Column(db.CHAR(5), db.ForeignKey('COLLECTIONS.collection_id'), nullable=False)
 
-    # creating shelving logging object
-    def __init__(self, date, start_time, end_time, total_shelving, student_id, location_id):
+    # Define the relationship to the Student model
+    student = db.relationship('Student', backref='shelvings', lazy=True)
+
+    def __init__(self, date, start_time, end_time, total_shelving, student_id, floor_id, start_call, end_call, collection_id):
         self.date = date
         self.start_time = start_time
         self.end_time = end_time
         self.total_shelving = total_shelving
         self.student_id = student_id
-        self.location_id = location_id
+        self.floor_id = floor_id
+        self.start_call = start_call
+        self.end_call = end_call
+        self.collection_id = collection_id
 
-    # string representation
     def __repr__(self):
-        return f'{self.student_id}: {self.date} {self.start_time} {self.end_time} {self.total_shelving} {self.location_id}'
+        return f'{self.student_id}: {self.date} {self.start_time} {self.end_time} {self.total_shelving} {self.floor_id} {self.collection_id}'
 
 
 
@@ -394,7 +434,6 @@ class ProblemList(db.Model):
         return f'{self.problem_id}: {self.problem_description}'
 
 
-
 # table for problem logging
 class Problem(db.Model):
     __tablename__ = 'PROBLEM'
@@ -402,17 +441,15 @@ class Problem(db.Model):
     date = db.Column(db.DATE, primary_key=True, nullable=False)
     call_no = db.Column(db.VARCHAR, primary_key=True, nullable=False)
     problem_id = db.Column(db.CHAR(5), db.ForeignKey('PROBLEM_LIST.problem_id'), nullable=True)
-    comments = db.Column(db.VARCHAR(100), nullable=True)
 
     # creating problem object
-    def __init__(self, student_id, date, call_no, problem_id, comments):
+    def __init__(self, student_id, date, call_no, problem_id):
         self.student_id = student_id
         self.date = date
         self.call_no = call_no
         self.problem_id = problem_id
-        self.comments = comments
 
     # string representation
     def __repr__(self):
-        return f'{self.student_id}: {self.date} {self.call_no} {self.problem_id} {self.comments}'
+        return f'{self.student_id}: {self.date} {self.call_no} {self.problem_id}'
 

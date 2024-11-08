@@ -1,0 +1,122 @@
+{%extends 'supervisor-navbar-base.html'%}
+
+{%block page_title%}
+Shelving
+{%endblock%}
+
+{%block child_content%}
+<p class="shelving">Shelving</p>
+{%endblock%}
+
+{%block page_content%}
+<div class="container">
+
+<form action="{{ url_for('supervisor_input_data_4') }}" method="POST">
+    <!-- Dropdown for Student Name -->
+    <div class="row">
+        <div class="col-2">
+            <label for="student_id" class="form-label mt-4"><strong>Student Name</strong></label>
+            <select class="form-select custom-form" id="student_id" name="student_id" required>
+                <option value="" disabled selected>Select Student</option>
+                {% for student in students %}
+                    <option value="{{ student.student_id }}">{{ student.first_name }} {{ student.last_name }}</option>
+                {% endfor %}
+            </select>
+        </div>        
+        
+        <!-- Input for Number of Shelves Completed -->
+        <div class="col-2">
+            <label for="shelves_completed" class="form-label mt-4"><strong>Shelves Completed</strong></label>
+            <input type="number" id="shelves_completed" name="shelves_completed" class="form-control custom-form" required min="1">
+        </div>
+
+        <!-- Dropdown for Floor Location -->
+        <div class="col-2">
+            <label for="floor_id" class="form-label mt-4"><strong>Floor</strong></label>
+            <select class="form-select custom-form" id="floor_id" name="floor_id" required>
+                <option value="" disabled selected>Select Floor</option>
+                {% for floor in floors %}
+                    <option value="{{ floor.floor_id }}">{{ floor.floor }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <!-- Dropdown for Collection Location -->
+        <div class="col-2">
+            <label for="collection_id" class="form-label mt-4"><strong>Collection</strong></label>
+            <select class="form-select custom-form" id="collection_id" name="collection_id" required>
+                <option value="" disabled selected>Select Collection</option>
+            </select>
+        </div>
+        
+        <!-- Add JavaScript to dynamically update the collections -->
+        <script>
+            document.getElementById("floor_id").addEventListener("change", function() {
+                let floorId = this.value;
+                let collectionSelect = document.getElementById("collection_id");
+        
+                // Clear existing options
+                collectionSelect.innerHTML = '<option value="" disabled selected>Select Collection</option>';
+        
+                // If no floor is selected, return
+                if (!floorId) return;
+        
+                // Get the collections for the selected floor using an AJAX request
+                fetch(`/get_collections/${floorId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Populate the collections dropdown
+                        data.collections.forEach(function(collection) {
+                            let option = document.createElement("option");
+                            option.value = collection.collection_id;
+                            option.textContent = collection.collection;
+                            collectionSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error("Error fetching collections:", error));
+            });
+        </script>
+        
+
+    </div>
+    
+    <div class="row">
+        <!-- Date Picker for Date -->
+        <div class="col-2">
+            <label for="date" class="form-label mt-4"><strong>Date</strong></label>
+            <input type="date" id="date" name="date" class="form-control custom-form" required>
+        </div>
+
+        <!-- Time Picker for Start Time -->
+        <div class="col-2">
+            <label for="start_time" class="form-label mt-4"><strong>Start Time</strong></label>
+            <input type="time" id="start_time" name="start_time" class="form-control custom-form" required>
+        </div>
+
+        <!-- Time Picker for End Time -->
+        <div class="col-2">
+            <label for="end_time" class="form-label mt-4"><strong>End Time</strong></label>
+            <input type="time" id="end_time" name="end_time" class="form-control custom-form" required>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Input for Start Call Number -->
+        <div class="col-2">
+            <label for="start_call" class="form-label mt-4"><strong>Start Call Number</strong></label>
+            <input type="text" id="start_call" name="start_call" class="form-control custom-form" required>
+        </div>
+
+        <!-- Input for End Call Number -->
+        <div class="col-2">
+            <label for="end_call" class="form-label mt-4"><strong>End Call Number</strong></label>
+            <input type="text" id="end_call" name="end_call" class="form-control custom-form" required>
+        </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary mt-4" id="submit_button">Submit</button>
+</form>
+
+
+{%endblock%}

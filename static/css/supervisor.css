@@ -343,7 +343,6 @@ label {
 }
 
 
-
 #student-list-pagination {
     color: black;
     font-size: 80%;
@@ -509,4 +508,39 @@ div#stack-dropdown-button {
 
 .manager-student-list-buttons {
     display:inline-block;
+}
+
+.btn.btn-primary.mt-2 {
+    background-color: black;
+    border-color: black;
+    color: white;
+}
+
+.btn.btn-primary.mt-2:hover {
+    background-color: #00FFD1;
+    border-color: #00FFD1;
+    color: white;
+}
+
+#task_id {
+    padding-top: 4%;
+    padding-bottom: 4%;
+    width: 40%;
+    margin-bottom: 5%;
+}
+
+.row.justify-content-center.task-button {
+    margin-top: 5%;
+}
+
+#submit_button {
+    background-color: #00FFD1;
+    color: white;
+    border: #00FFD1;
+}
+
+#submit_button:hover {
+    background-color: black;
+    color: white;
+    border: black;
 }

@@ -1,202 +1,41 @@
 {%extends 'supervisor-navbar-base.html'%}
 
 {%block page_title%}
-{% if action and action == 'create' %}
-        Add Student Data
-    {% elif action and action == 'update'  %}
-        Update Student Data
-    {% else %}
-        {% if current_user.role == 'STUDENT' %}
-            View My Record
-        {% else %}
-            View Student Data
-        {% endif %}
-    {% endif %}
+Student
 {%endblock%}
 
-{%block child_content%} 
-    {% if action and action == 'create' %}
-        Add Student Data
-    {% elif action and action == 'update'  %}
-        Update Student Data
-    {% else %}
-        {% if current_user.role == 'STUDENT' %}
-            View My Record
-        {% else %}
-            View Student Data
-        {% endif %}
-    {% endif %} 
+{%block child_content%}
+<p class="student-name">Input Data</p>
 {%endblock%}
 
 {%block page_content%}
+<div class="container">
 
-{% if action and action in ['create', 'update'] %}
-<form class="row g-3"
-      action="{{ url_for('student_edit', student_id=student['student_id']) if student else url_for('student_create') }}" method="post">
-{% else %}
-    <div class="row g-3">
-{% endif %}
-
-<div class="row input-data-form justify-content-center">
-    <div class="col-3">
-        {% if action in ['create', 'update'] %}
-        <div style="width: 80%">
-            <label for="student_id" class="form-label"><strong>Student</strong></label>
-            <select class="form-select custom-form" id="student_id" name="student_id" required>
-                <option value="" disabled selected>Select a student</option>
-                {% if students %}
-                    {% for each_student in students %}
-                        <option value="{{ each_student.student_id }}"
-                            {% if each_student.student_id == (student_id if student_id else '') %} selected {% endif %}>
-                            {{ each_student.student_fname }} {{ each_student.student_lname }}
-                        </option>
-                    {% endfor %}
-                {% else %}
-                    <option value="" disabled>No students available</option>
-                {% endif %}
-            </select>
-        {% else %}
-            <strong>Student Name</strong>
-            <br>{{ student['student_fname'] }} {{ student['student_lname'] }}
-        {% endif %}
-        </div>
-        <!-- Date Input -->
+    <div class="row justify-content-center task-button">
         <div style="width: 50%">
-            <label for="task_date" class="form-label mt-4"><strong>Task Date</strong></label>
-            <input type="date" class="form-control custom-form" id="task_date" name="task_date" required>
-        </div>
-        <!-- Start Time Input -->
-        <div style="width: 50%">
-            <label for="start_time" class="form-label mt-4"><strong>Start Time</strong></label>
-            <input type="time" class="form-control custom-form" id="start_time" name="start_time" required>
-        </div>
-
-        <!-- End Time Input -->
-        <div style="width: 50%">
-            <label for="end_time" class="form-label mt-4"><strong>End Time</strong></label>
-            <input type="time" class="form-control custom-form" id="end_time" name="end_time" required>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const floorSelect = document.getElementById('floor_id');  // Assuming this is the ID for the floor select
-            const collectionSelect = document.getElementById('collection_id');
-
-            floorSelect.addEventListener('change', function() {
-                const floorId = floorSelect.value;
-
-                // Fetch collections for the selected floor
-                fetch(`/get_collections/${floorId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        // Clear previous options
-                        collectionSelect.innerHTML = '<option value="" disabled selected>Select Collection</option>';
-
-                        // Populate new options
-                        data.forEach(collection => {
-                            const option = document.createElement('option');
-                            option.value = collection.collection_id;
-                            option.textContent = collection.collection;
-                            collectionSelect.appendChild(option);
-                        });
-                    })
-                    .catch(error => console.error('Error fetching collections:', error));
-            });
-        });
-    </script>
-
-    <div class="col-3">
-        <div style="width: 50%">
-            <label for="floor_id" class="form-label"><strong>Floor</strong></label>
-            <select class="form-select custom-form" id="floor_id" name="floor_id" required>
-                <option value="" disabled selected>Select Floor</option>
-                {% for floor in floors %}
-                    <option value="{{ floor.floor_id }}">{{ floor.floor }}</option>
+            <label for="task_id" class="form-label mt-4"><strong>Task</strong></label>
+            <select class="form-select custom-form" id="task_id" name="task_id" required onchange="redirectToTaskPage()">
+                <option value="" disabled selected>Select Task</option>
+                {% for each_task in tasks %}
+                    <option value="{{ each_task.task_id }}"
+                        {% if task_id and task_id == each_task.task_id %} selected {% endif %}>
+                        {{ each_task.task }}
+                    </option>
                 {% endfor %}
             </select>
         </div>
-
-        <div style="width: 50%">
-            <label for="collection_id" class="form-label mt-4"><strong>Collection</strong></label>
-            <select class="form-select custom-form" id="collection_id" name="collection_id" required>
-                <option value="" disabled selected>Select Collection</option>
-            </select>
-        </div>
         
-        <div style="width: 50%">
-            <label for="quantity" class="form-label mt-4"><strong>Quantity</strong></label>
-            <input type="number" class="form-control custom-form" id="quantity" name="quantity" required>
-        </div>
-    </div>
-
-
-    <div class="col-3">
-        {% if action in ['create', 'update'] %}
-            <!-- <div style="width: 50%">
-                <label for="task_id" class="form-label"><strong>Task</strong></label>
-                <select class="form-select custom-form" id="task_id" name="task_id" required>
-                    <option value="" disabled selected>Select Task</option>
-                    {% if tasks %}
-                        {% for each_task in tasks %}
-                            <option value="{{ each_task.task_id }}"
-                                {% if each_task.task_id == (task_id if task_id else '') %} selected {% endif %}>
-                                {{ each_task.task }}
-                            </option>
-                        {% endfor %}
-                    {% else %}
-                        <option value="" disabled>No tasks available</option>
-                    {% endif %}
-                </select>
-            </div> -->
-            <div style="width: 50%">
-                <label for="task_id" class="form-label mt-4"><strong>Task</strong></label>
-                <select class="form-select custom-form" id="task_id" name="task_id" required>
-                    <option value="" disabled selected>Select Task</option>
-                    {% for each_task in tasks %}
-                        <option value="{{ each_task.task_id }}"
-                            {% if student and student.task_id == each_task.task_id %} selected {% endif %}>
-                            {{ each_task.task }}
-                        </option>
-                    {% endfor %}
-                </select>
-            </div>
-            
-            
-            <div style="width: 50%">
-                <label for="quantity" class="form-label mt-4"><strong>Start Call #</strong></label>
-                <input type="text" class="form-control custom-form" id="quantity" name="quantity" required>
-            </div>
-            
-            <div style="width: 50%">
-                <label for="quantity" class="form-label mt-4"><strong>End Call #</strong></label>
-                <input type="text" class="form-control custom-form" id="quantity" name="quantity" required>
-            </div>
-        {% else %}
-            <strong>Selected Task</strong>
-            <br>{{ tasks['task'] }}
-        {% endif %}
-    </div>
-
-    <div class="col-12 text-center">
-        {% if action and action in ['create', 'update'] %}
-        <button class="btn btn-primary" type="submit">{{ 'Submit' if action=='create' else 'Update' }}</button>
-        {% endif %}
+        <script>
+        function redirectToTaskPage() {
+            const taskSelect = document.getElementById('task_id');
+            const selectedTaskId = taskSelect.value;
+            if (selectedTaskId) {
+                // Redirect to the task page based on the selected task ID
+                window.location.href = `/supervisor-input-data/${selectedTaskId}`;
+            }
+        }
+        </script>
+        
+    </div>  
     
-        {% if current_user.role in ['supervisor', 'ADMIN'] %}
-        <a href="{{ url_for('supervisor_student_entry') }}" class="btn btn-secondary" role="button">
-            {% if action and action in ['create', 'update'] %}
-            Cancel
-            {% else %}
-            Return
-            {% endif %}
-        </a>
-        {% endif %}
-      </div>
-
-</div>
-
-
-
-  {%endblock%}
-  
+{%endblock%}

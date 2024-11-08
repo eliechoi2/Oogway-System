@@ -1,5 +1,5 @@
 from app import app, db
-from models import User, Levels, Tasks, Floor, Collections
+from models import User, Levels, Tasks, Floor, Collections, ProblemList, Student
 from werkzeug.security import generate_password_hash
 
 with app.app_context():
@@ -40,8 +40,7 @@ with app.app_context():
         {'task_id' : 3, 'task' : 'In-House'},
         {'task_id' : 4, 'task' : 'Shelving'},
         {'task_id' : 5, 'task' : 'Holds List'},
-        {'task_id' : 6, 'task' : 'RM List'},
-        {'task_id' : 7, 'task' : 'Hours Worked'},
+        {'task_id' : 6, 'task' : 'RM List'}
     ]
     
     for each_task in tasks:
@@ -129,6 +128,60 @@ with app.app_context():
         db.session.add(a_collection)
     db.session.commit()
     
+    problems_list = [
+        {'problem_id' : 1, 'problem_description' : 'Faded Call Number'},
+        {'problem_id' : 2, 'problem_description' : 'Peeling Call Number'},
+        {'problem_id' : 3, 'problem_description' : 'Damaged/Ripped Call Number'},
+        {'problem_id' : 4, 'problem_description' : 'Missing Call Number'}
+    ]
+    
+    for each_problems_list in problems_list:
+        print(f'{each_problems_list["problem_description"]} inserted into problems_list')
+        a_problems_list = ProblemList (
+            problem_id=each_problems_list["problem_id"],
+            problem_description=each_problems_list["problem_description"],
+        )
+        db.session.add(a_problems_list)
+    db.session.commit()
+    
+    students = [
+        {'student_id': 1, 'student_fname': 'Dayri', 'student_lname': 'Almonte', 'student_email': 'dayri.almonte@gmail.com', 'student_username': 'dayri1', 'student_password': 'password1'},
+        {'student_id': 2, 'student_fname': 'Kate', 'student_lname': 'Bartolotta', 'student_email': 'kate.bartolotta@gmail.com', 'student_username': 'kate2', 'student_password': 'password2'},
+        {'student_id': 3, 'student_fname': 'Jane', 'student_lname': 'DeLashmutt', 'student_email': 'jane.delashmutt@gmail.com', 'student_username': 'jane3', 'student_password': 'password3'},
+        {'student_id': 4, 'student_fname': 'Ella', 'student_lname': 'Gawitt', 'student_email': 'ella.gawitt@gmail.com', 'student_username': 'ella4', 'student_password': 'password4'},
+        {'student_id': 5, 'student_fname': 'Mary', 'student_lname': 'Gunn', 'student_email': 'mary.gunn@gmail.com', 'student_username': 'mary5', 'student_password': 'password5'},
+        {'student_id': 6, 'student_fname': 'Mohamed', 'student_lname': 'Kamara', 'student_email': 'mohamed.kamara@gmail.com', 'student_username': 'mohamed6', 'student_password': 'password6'},
+        {'student_id': 7, 'student_fname': 'Kai', 'student_lname': 'Liang', 'student_email': 'kai.liang@gmail.com', 'student_username': 'kai7', 'student_password': 'password7'},
+        {'student_id': 8, 'student_fname': 'Sophia', 'student_lname': 'Marrone', 'student_email': 'sophia.marrone@gmail.com', 'student_username': 'sophia8', 'student_password': 'password8'},
+        {'student_id': 9, 'student_fname': 'Madison', 'student_lname': 'Pease', 'student_email': 'madison.pease@gmail.com', 'student_username': 'madison9', 'student_password': 'password9'},
+        {'student_id': 10, 'student_fname': 'Nitish', 'student_lname': 'Sharma', 'student_email': 'nitish.sharma@gmail.com', 'student_username': 'nitish10', 'student_password': 'password10'},
+        {'student_id': 11, 'student_fname': 'Adrienne', 'student_lname': 'Burns', 'student_email': 'adrienne.burns@gmail.com', 'student_username': 'adrienne11', 'student_password': 'password11'},
+        {'student_id': 12, 'student_fname': 'Eliana', 'student_lname': 'Choi', 'student_email': 'eliana.choi@gmail.com', 'student_username': 'eliana12', 'student_password': 'password12'},
+        {'student_id': 13, 'student_fname': 'Ryan', 'student_lname': 'Kim', 'student_email': 'ryan.kim@gmail.com', 'student_username': 'ryan13', 'student_password': 'password13'},
+        {'student_id': 14, 'student_fname': 'Timothy', 'student_lname': 'Chung', 'student_email': 'timothy.chung@gmail.com', 'student_username': 'timothy14', 'student_password': 'password14'},
+        {'student_id': 15, 'student_fname': 'Elisabeth', 'student_lname': 'Caruso', 'student_email': 'elisabeth.caruso@gmail.com', 'student_username': 'elisabeth15', 'student_password': 'password15'},
+        {'student_id': 16, 'student_fname': 'Evony', 'student_lname': 'Salmeron', 'student_email': 'evony.salmeron@gmail.com', 'student_username': 'evony16', 'student_password': 'password16'},
+        {'student_id': 17, 'student_fname': 'Manuel', 'student_lname': 'Custodio', 'student_email': 'manuel.custodio@gmail.com', 'student_username': 'manuel17', 'student_password': 'password17'},
+        {'student_id': 18, 'student_fname': 'Shyazana', 'student_lname': 'Rahaman', 'student_email': 'shyazana.rahaman@gmail.com', 'student_username': 'shyazana18', 'student_password': 'password18'}
+    ]
+    
+    for each_student in students:
+        print(f'{each_student["student_fname"]} inserted into students')
+        # Create a Student object
+        a_student = Student(
+            student_id=each_student["student_id"],
+            student_fname=each_student["student_fname"],
+            student_lname=each_student["student_lname"],
+            student_email=each_student["student_email"],
+            student_username=each_student["student_username"],
+            student_password=each_student["student_password"]
+        )
+        
+        db.session.add(a_student)
+
+        # Commit the transaction
+    db.session.commit()
+    
 
 
     # creating test variables for the student table
@@ -155,7 +208,7 @@ with app.app_context():
     #     )
     #     db.session.add(in_student)
     #     db.session.commit()
-
+    
 
     # test variables for supervisor table
 
