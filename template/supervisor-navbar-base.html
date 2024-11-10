@@ -3,70 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{%block page_title%}{%endblock%}</title>
+    <title>{% block page_title %}{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href='https://fonts.googleapis.com/css?family=League Spartan' rel='stylesheet'>
     <link rel="stylesheet" href="/static/css/supervisor.css">
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 </head>
 <body>
-
-    <!-- Navbar -->
     <div class="col-2 navbar-content p-4" id="navbar">
         <a href="/supervisor-dashboard" class="row justify-content-center" id="title">MCKELDIN CMR</a>
         <hr>
 
-        <!-- Navbar Items -->
         <ul class="nav flex-column">
             <li class="navbar-li active">
                 <a href="/supervisor-dashboard" class="image-container">
-                    <img class="front" src="static\images\home-gray.png"alt="First Image">
-                    <img class="back" src="static\images\home-white.png" alt="Second Image">
+                    <img class="front" src="static/images/home-gray.png" alt="First Image">
+                    <img class="back" src="static/images/home-white.png" alt="Second Image">
                     <p class="navbar-item">Dashboard</p>
                 </a>
             </li>
             <li class="navbar-li">
                 <a class="image-container" href="/supervisor-student-overall-view">
-                    <img class="front" src="static\images\student-gray.png"alt="First Image">
-                    <img class="back" src="static\images\student-white.png" alt="Second Image">
+                    <img class="front" src="static/images/student-gray.png" alt="First Image">
+                    <img class="back" src="static/images/student-white.png" alt="Second Image">
                     <p class="navbar-item">Students</p>
                 </a>
             </li>
             <li class="navbar-li">
                 <a class="image-container" href="/supervisor-input-data">
-                    <img class="front" src="static\images\data-input-gray.png"alt="First Image">
-                    <img class="back" src="static\images\data-input-white.png" alt="Second Image">
+                    <img class="front" src="static/images/data-input-gray.png" alt="First Image">
+                    <img class="back" src="static/images/data-input-white.png" alt="Second Image">
                     <p class="navbar-item">Input Data</p>
                 </a>
             </li>
             <li class="navbar-li">
                 <div class="accordion" id="accordion-shelving">
                     <div class="accordion-item">
-                      <h2 class="accordion-header">
-                        <div class="image-container">
-                            <button class="accordion-button collapsed navbar-item" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                <img class="front" src="static\images\floor-gray.png"alt="First Image">
-                                <img class="back" src="static\images\floor-white.png" alt="Second Image">
-                                Shelving
-                            </button>
+                        <h2 class="accordion-header">
+                            <div class="image-container">
+                                <button class="accordion-button collapsed navbar-item" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    <img class="front" src="static/images/floor-gray.png" alt="First Image">
+                                    <img class="back" src="static/images/floor-white.png" alt="Second Image">
+                                    Shelving
+                                </button>
+                            </div>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordion-shelving">
+                            <div class="accordion-body">
+                                <ul class="accordion-list">
+                                    <li><a href="/supervisor-shelving-floor/1.html">3rd Floor</a></li>
+                                    <li><a href="/supervisor-shelving-floor/2.html">4th Floor</a></li>
+                                    <li><a href="/supervisor-shelving-floor/3.html">5th Floor</a></li>
+                                    <li><a href="/supervisor-shelving-floor/4.html">6th Floor</a></li>
+                                    <li><a href="/supervisor-shelving-floor/5.html">7th Floor</a></li>
+                                    <li><a href="/supervisor-shelving-floor/6.html">Others SR</a></li>
+                                </ul>
+                            </div>
                         </div>
-                      </h2>
-                      <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordion-shelving">
-                        <div class="accordion-body">
-                            <ul class="accordion-list">
-                                <li><a href="/supervisor-shelving-floor/1.html">3rd Floor</a></li>
-                                <li><a href="/supervisor-shelving-floor/2.html">4th Floor</a></li>
-                                <li><a href="/supervisor-shelving-floor/3.html">5th Floor</a></li>
-                                <li><a href="/supervisor-shelving-floor/4.html">6th Floor</a></li>
-                                <li><a href="/supervisor-shelving-floor/5.html">7th Floor</a></li>
-                                <li><a href="/supervisor-shelving-floor/6.html">Others SR</a></li>
-                            </ul>
-                        </div>
-                      </div>
                     </div>
                 </div>
 
-                <!-- Shelving Submenu -->
                 <ul class="collapse nav flex-column" id="submenu2" data-bs-parent="#menu">
                     <li class="w-100 mb-3">
                         <a href="#" class="nav-link sub">3rd Floor</a>
@@ -90,8 +86,8 @@
             </li>
             <li class="navbar-li">
                 <a class="image-container" href="">
-                    <img class="front" src="static\images\analytics-gray.png"alt="First Image">
-                    <img class="back" src="static\images\analytics-white.png" alt="Second Image">
+                    <img class="front" src="static/images/analytics-gray.png" alt="First Image">
+                    <img class="back" src="static/images/analytics-white.png" alt="Second Image">
                     <p class="navbar-item">Analytics</p>
                 </a>
             </li>
@@ -100,40 +96,38 @@
         <ul class="nav flex-column">
             <li class="navbar-li">
                 <a class="image-container" href="">
-                    <img class="front" src="static\images\profile-gray.png"alt="First Image">
-                    <img class="back" src="static\images\profile-white.png" alt="Second Image">
+                    <img class="front" src="static/images/profile-gray.png" alt="First Image">
+                    <img class="back" src="static/images/profile-white.png" alt="Second Image">
                     <p class="navbar-item">Profile</p>
                 </a>
             </li>
         </ul>
     </div>
 
-    <!-- Header -->
     <div id="col page-content">
         <div class="row pt-2">
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" id="account_button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="static\images\profile-gray.png" alt="" id="account_icon">
-                    Amy Kim
+                    <img src="static/images/profile-gray.png" alt="" id="account_icon">
+                    {{ current_user.first_name }} {{ current_user.last_name }}
                 </button>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Logout</a></li>
+                    <a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a>
                 </ul>
-              </div>
-            
+            </div>
         </div>
-        <!-- Child Page Name -->
+
         <div class="row ps-4" id="page_title">
-            {%block child_content%}
-            {%endblock%}
+            {% block child_content %}
+            {% endblock %}
         </div>
-        <!-- Child Content -->
+
         <div class="row ps-4">
-            {%block page_content%}
-            {%endblock%}
+            {% block page_content %}
+            {% endblock %}
         </div>
     </div>
-    <script src="static\js\script.js"></script>
+    <script src="static/js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>

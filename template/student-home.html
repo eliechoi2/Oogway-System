@@ -1,1 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Input Data</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{%block page_title%}{%endblock%}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=League Spartan' rel='stylesheet'>
+    <link rel="stylesheet" href="/static/css/supervisor.css">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+</head>
+<body>
+<div class="container">
 
+    <div class="row justify-content-center task-button">
+        <div style="width: 50%">
+            <label for="task_id" class="form-label mt-4"><strong>Task</strong></label>
+            <select class="form-select custom-form" id="task_id" name="task_id" required onchange="redirectToTaskPage()">
+                <option value="" disabled selected>Select Task</option>
+                {% for each_task in tasks %}
+                    <option value="{{ each_task.task_id }}">{{ each_task.task }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        
+        <script>
+        function redirectToTaskPage() {
+            const taskSelect = document.getElementById('task_id');
+            const selectedTaskId = taskSelect.value;
+            if (selectedTaskId) {
+                window.location.href = `/student-input-data/${selectedTaskId}`;
+            }
+        }
+        </script>
+        
+    </div>  
+    
+</body>
+</html>

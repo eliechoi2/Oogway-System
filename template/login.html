@@ -10,7 +10,17 @@
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 </head>
 <body>
-
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+      <div class="alert-container">
+          {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">
+                  {{ message }}
+              </div>
+          {% endfor %}
+      </div>
+  {% endif %}
+{% endwith %}
  
       <div class="justify-content-center">
   

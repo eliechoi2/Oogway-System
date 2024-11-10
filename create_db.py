@@ -9,8 +9,8 @@ with app.app_context():
     users = [
         {'username': 'student', 'email': 'student@umd.edu', 'first_name':'student', 'last_name':'student',
             'password': generate_password_hash('studentpw', method='pbkdf2:sha256'), 'role':'STUDENT'},
-        {'username': 'supervisor', 'email': 'supervisor@umd.edu', 'first_name':'supervisor', 'last_name':'supervisor',
-            'password': generate_password_hash('supervisorpw', method='pbkdf2:sha256'), 'role':'supervisor'},
+        {'username': 'amykim', 'email': 'amykim@umd.edu', 'first_name':'Amy', 'last_name':'Kim',
+            'password': generate_password_hash('amykim', method='pbkdf2:sha256'), 'role':'supervisor'},
         {'username': 'admin', 'email': 'admin@umd.edu', 'first_name':'admin', 'last_name':'admin',
             'password': generate_password_hash('adminpw', method='pbkdf2:sha256'), 'role':'ADMIN'},
     ]

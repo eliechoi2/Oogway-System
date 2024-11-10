@@ -50,6 +50,28 @@ class supervisor(db.Model):
 
 # table for student information
 # THIS IS COMPLETE!!!
+# class Student(db.Model):
+#     __tablename__ = 'STUDENT'
+#     student_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     student_fname = db.Column(db.VARCHAR(50), nullable=False)
+#     student_lname = db.Column(db.VARCHAR(50), nullable=False)
+#     student_email = db.Column(db.VARCHAR(100), nullable=False, unique=True)
+#     student_username = db.Column(db.VARCHAR(100), nullable=False, unique=True)
+#     student_password = db.Column(db.VARCHAR(30), nullable=False)
+    
+#     def __init__(self, student_id, student_fname, student_lname, student_email, student_username, student_password):
+#         self.student_id = student_id
+#         self.student_fname = student_fname
+#         self.student_lname = student_lname
+#         self.student_email = student_email
+#         self.student_username = student_username
+#         self.student_password = student_password
+
+#     def get_id(self):
+#         return self.student_id
+#     def __repr__(self):
+#         return f'User ID: {self.student_id}'
+
 class Student(db.Model):
     __tablename__ = 'STUDENT'
     student_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -59,18 +81,13 @@ class Student(db.Model):
     student_username = db.Column(db.VARCHAR(100), nullable=False, unique=True)
     student_password = db.Column(db.VARCHAR(30), nullable=False)
     
-    def __init__(self, student_id, student_fname, student_lname, student_email, student_username, student_password):
-        self.student_id = student_id
-        self.student_fname = student_fname
-        self.student_lname = student_lname
-        self.student_email = student_email
-        self.student_username = student_username
-        self.student_password = student_password
+    def __repr__(self):
+        return f'User ID: {self.student_id}, Name: {self.student_fname} {self.student_lname}'
 
+    # You can still keep the get_id method for custom behavior if needed
     def get_id(self):
         return self.student_id
-    def __repr__(self):
-        return f'User ID: {self.student_id}'
+
     
     
 class Student_Data(db.Model):
@@ -244,6 +261,7 @@ class ShelfReading(db.Model):
     date = db.Column(db.DATE, primary_key=True, nullable=False)
     start_time = db.Column(db.DateTime, primary_key=True, nullable=False)
     end_time = db.Column(db.DateTime, nullable=False)
+    duration = db.Column(db.Float, nullable=False)
     shelves_completed = db.Column(db.Integer, nullable=False)
     start_call = db.Column(db.VARCHAR(20), nullable=False)
     end_call = db.Column(db.VARCHAR(20), nullable=False)
@@ -251,55 +269,26 @@ class ShelfReading(db.Model):
     student_id = db.Column(db.CHAR(10), db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
     # location_id FK referencing LOCATION table
     floor_id = db.Column(db.CHAR(5), db.ForeignKey('FLOOR.floor_id'), nullable=False)
+    collection_id = db.Column(db.CHAR(5), db.ForeignKey('COLLECTIONS.collection_id'), nullable=False)
 
     # creating Shelf Reading logging object
-    def __init__(self, date, start_time, end_time, shelves_completed, start_call, end_call, student_id, floor_id):
+    def __init__(self, date, start_time, end_time, duration, shelves_completed, start_call, end_call, student_id, floor_id, collection_id):
         self.date = date
         self.start_time = start_time
         self.end_time = end_time
+        self.duration = duration
         self.shelves_completed = shelves_completed
         self.start_call = start_call
         self.end_call = end_call
         self.student_id = student_id
         self.floor_id = floor_id
+        self.collection_id = collection_id
 
     # string representation
     def __repr__(self):
-        return (f'{self.student_id}: {self.date} {self.start_time} {self.end_time} '
-                f'{self.shelves_completed} {self.start_call} {self.end_call} {self.floor_id}')
+        return (f'{self.student_id}: {self.date} {self.start_time} {self.end_time} {self.duration} '
+                f'{self.shelves_completed} {self.start_call} {self.end_call} {self.floor_id} {self.collection_id}')
 
-
-
-# table for shelving
-# class Shelving(db.Model):
-#     __tablename__ = 'SHELVING'
-#     date = db.Column(db.DATE, primary_key=True, nullable=False)
-#     start_time = db.Column(db.DateTime, primary_key=True, nullable=False)
-#     end_time = db.Column(db.DateTime, nullable=False)
-#     total_shelving = db.Column(db.Integer, nullable=False)
-#     # student_id FK referencing STUDENT table
-#     student_id = db.Column(db.CHAR(10), db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
-#     # location_id FK referencing LOCATION table
-#     floor_id = db.Column(db.CHAR(5), db.ForeignKey('FLOOR.floor_id'), nullable=False)
-#     start_call = db.Column(db.VARCHAR(20), nullable=False)
-#     end_call = db.Column(db.VARCHAR(20), nullable=False)
-#     collection_id = db.Column(db.CHAR(5), db.ForeignKey('COLLECTIONS.collection_id'), nullable=False)
-
-#     # creating shelving logging object
-#     def __init__(self, date, start_time, end_time, total_shelving, student_id, floor_id, start_call, end_call, collection_id):
-#         self.date = date
-#         self.start_time = start_time
-#         self.end_time = end_time
-#         self.total_shelving = total_shelving
-#         self.student_id = student_id
-#         self.floor_id = floor_id
-#         self.start_call = start_call
-#         self.end_call = end_call
-#         self.collection_id = collection_id
-
-#     # string representation
-#     def __repr__(self):
-#         return f'{self.student_id}: {self.date} {self.start_time} {self.end_time} {self.total_shelving} {self.floor_id} {self.collection_id}'
 
 class Shelving(db.Model):
     __tablename__ = 'SHELVING'

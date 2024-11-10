@@ -1,12 +1,14 @@
 {% extends 'supervisor-navbar-base.html' %}
 
 {% block page_title %}
-Floors
+{{ floor.floor }}  <!-- Display the specific floor name -->
 {% endblock %}
 
 {% block child_content %}
-<p>Floor {{ floor_id }}</p>
-{% endblock %}
+<p> {{ floor.floor }}  <!-- Display the specific floor name here as well -->
+</p>
+{%endblock%}
+
 
 {% block page_content %}
 <div class="container">
