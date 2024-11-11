@@ -1,4 +1,4 @@
-from models import db, Student, Admin, Tasks, Floor, Collections, Student_Data, ShelfReading, Problem, ProblemList, Shelving
+from models import db, Student, Admin, Tasks, Floor, Collections, Student_Data, ShelfReading, Problem, ProblemList, Shelving, InHouse, HoldList, RmList 
 import os
 from flask import Flask, jsonify, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -11,6 +11,9 @@ import pandas as pd
 from datetime import datetime
 from sqlalchemy.orm.exc import NoResultFound
 import numpy as np
+import re
+from sqlalchemy.orm import aliased
+from sqlalchemy import func, or_
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -137,7 +140,30 @@ def admin_dashboard():
 @login_required
 @role_required(['supervisor'])
 def supervisor_dashboard():
-    return render_template('supervisor-dashboard.html') 
+    # Fetch total counts from the database for today
+    total_shelfreads = db.session.query(func.sum(ShelfReading.shelves_completed)).filter(Shelving.date == func.current_date()).scalar() or 0
+    total_problem_items = db.session.query(func.sum(Problem.total_problems)).filter(Problem.date == func.current_date()).scalar() or 0
+    total_in_house = db.session.query(func.sum(InHouse.total_retrieved)).filter(InHouse.date == func.current_date()).scalar() or 0
+    total_shelving = db.session.query(func.sum(Shelving.total_shelving)).filter(Shelving.date == func.current_date()).scalar() or 0
+    total_holds_list = db.session.query(func.sum(HoldList.total_holds)).filter(HoldList.date == func.current_date()).scalar() or 0
+    total_rm_list = db.session.query(func.sum(RmList.total_rm)).filter(RmList.date == func.current_date()).scalar() or 0
+
+    # Fetch top performers (you can adjust this query as needed)
+    # top_performers = db.session.query(
+    #     Student.student_fname, Student.student_lname, Levels.level_name, func.sum(Student_Data.total_shelfreads).label('total_shelfreads')
+    # ).join(Student_Data, Student.student_id == Student_Data.student_id) \
+    #  .join(Levels, Student_Data.level_id == Levels.level_id) \
+    #  .group_by(Student.student_id, Levels.level_name) \
+    #  .order_by('total_shelfreads desc') \
+    #  .limit(3).all()
+
+    return render_template('supervisor-dashboard.html', 
+                           total_shelfreads=total_shelfreads,
+                           total_problem_items=total_problem_items,
+                           total_in_house=total_in_house,
+                           total_shelving=total_shelving,
+                           total_holds_list=total_holds_list,
+                           total_rm_list=total_rm_list)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -185,15 +211,7 @@ def logout():
     return redirect(url_for('home'))
 
 
-# supervisor Routes
-@app.route('/supervisor-student-list-view')
-def supervisor_student_list_view():
-    students = Student.query.order_by(Student.student_id).all()
-    return render_template('supervisor-student-list-view.html', students=students)
 
-@app.route('/supervisor-student-overall-view')
-def supervisor_overall_view():
-    return render_template('supervisor-student-overall-view.html')
 
 @app.route('/supervisor-student')
 def supervisor_student():
@@ -551,21 +569,21 @@ def supervisor_input_data_4():
 #     return render_template(f'supervisor-shelving-floor/{floor_id}.html', collections=collections, shelvings=shelvings, floor_id=floor_id, floors=floors)
 
 @app.route('/supervisor-shelving-floor/<int:floor_id>.html')
-def show_floor_shelving_data(floor_id):
+def show_floor_shelfreading_data(floor_id):
     # Get the specific floor based on the floor_id
     floor = Floor.query.get(floor_id)  # Fetch the floor with the given floor_id
 
-    # Get the collections and shelvings for this floor
+    # Get the collections for this floor
     collections = Collections.query.filter_by(floor_id=floor_id).all()
-    shelvings = Shelving.query.filter_by(floor_id=floor_id).join(Student).all()
 
-    # Render the template with the floor object
+    # Get the shelfreading data for this floor, joined with student and collection
+    shelfreadings = ShelfReading.query.filter_by(floor_id=floor_id).join(Student).join(Collections).all()
+
+    # Render the template with the floor object and related data
     return render_template('supervisor-shelving-floor/1.html', 
                            collections=collections, 
-                           shelvings=shelvings, 
+                           shelfreadings=shelfreadings, 
                            floor=floor)  # Pass the specific floor object
-
-
 
 
 @app.route('/get_collections/<int:floor_id>')
@@ -580,6 +598,8 @@ def get_collections(floor_id):
             for collection in collections
         ]
     })
+
+
     
     
     
@@ -697,10 +717,8 @@ def upload_file():
 
 
 def process_excel_file(excel_file_path):
-    # Read the Excel file
     all_sheets = pd.read_excel(excel_file_path, sheet_name=None)
 
-    # New file path folder based on Excel filename
     folder_name = os.path.splitext(os.path.basename(excel_file_path))[0]
     parent_directory = "processed_files"
     folder_path = os.path.join(parent_directory, folder_name)
@@ -708,50 +726,41 @@ def process_excel_file(excel_file_path):
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
 
-    # Save each sheet as a separate CSV file
     for sheet_name, df in all_sheets.items():
         file_path = os.path.join(folder_path, f"{sheet_name}.csv")
         df.to_csv(file_path, index=False)
 
     print(f"All sheets saved as CSV files in the folder: {folder_path}")
 
-    # Folder to save edited files
     edited_folder_name = folder_name + "_edited"
     edited_folder_path = os.path.join(parent_directory, edited_folder_name)
 
     if not os.path.exists(edited_folder_path):
         os.makedirs(edited_folder_path)
 
-    # Process each sheet and save edited CSV files
     for sheet_name, df in all_sheets.items():
-        new_df = edit_sheet(df)  # Use the updated edit_sheet function
-        collection_name = sheet_name.replace("_edited", "")  # Ensure this matches the sheet's original name
+        new_df = edit_sheet(df)
+        collection_name = sheet_name.replace("_edited", "")  
         file_path = os.path.join(edited_folder_path, f"{collection_name}_edited.csv")
         new_df.to_csv(file_path, index=False)
         print(f"Edited sheet '{sheet_name}' saved to: {file_path}")
         
-        # Insert data into the database
-        insert_data_to_db(file_path, excel_file_path)  # Pass excel file path to insert data
+        insert_data_to_db(file_path, excel_file_path)
 
 
 def edit_sheet(df):
     default_datetime = pd.to_datetime('1900-01-01 00:00:00')
 
-    # Select relevant columns from the input dataframe
     temp_df = df.iloc[:, [0, 1, 2, 3, 5, 6, 7]]
     temp_df.columns = ['Name', 'date', 'start_time', 'end_time', 'shelves_completed', 'start_call', 'end_call']
 
-    # Remove rows with all NaN values and reset index
     cleaned_temp_df = temp_df.dropna(how='all').reset_index(drop=True)
 
-    # Convert 'date' column to datetime64[ns] type
     cleaned_temp_df['date'] = pd.to_datetime(cleaned_temp_df['date'], errors='coerce')
 
-    # Convert 'start_time' and 'end_time' to time format
     cleaned_temp_df['start_time'] = pd.to_datetime(cleaned_temp_df['start_time'], format='%H:%M:%S', errors='coerce').dt.time
     cleaned_temp_df['end_time'] = pd.to_datetime(cleaned_temp_df['end_time'], format='%H:%M:%S', errors='coerce').dt.time
 
-    # Combine 'date' with 'start_time' and 'end_time' to form full datetime values
     cleaned_temp_df['Start DateTime'] = cleaned_temp_df.apply(
         lambda row: datetime.combine(row['date'].date(), row['start_time']) if pd.notnull(row['date']) and pd.notnull(row['start_time']) else default_datetime,
         axis=1
@@ -770,35 +779,28 @@ def edit_sheet(df):
         lambda x: round(x.total_seconds() / 3600, 2) if isinstance(x, pd.Timedelta) else "Error, missing value"
     )
 
-    # Drop rows where 'Name' is empty or doesn't contain both a first and last name
     cleaned_temp_df = cleaned_temp_df.dropna(subset=['Name'])
 
-    # Get student IDs based on the first and last name
     cleaned_temp_df['student_id'] = cleaned_temp_df['Name'].apply(
         lambda name: get_student_id_from_db(name) if isinstance(name, str) else np.nan
     )
 
-    # Drop rows where student_id is not found (None)
     cleaned_temp_df = cleaned_temp_df.dropna(subset=['student_id'])
-
-    # Drop the 'Name' column and fill NaN values
+    
     cleaned_temp_df = cleaned_temp_df.drop(columns=['Name'])
     cleaned_temp_df['Start DateTime'] = cleaned_temp_df['Start DateTime'].fillna(default_datetime)
     cleaned_temp_df['End DateTime'] = cleaned_temp_df['End DateTime'].fillna(default_datetime)
     cleaned_temp_df['date'] = cleaned_temp_df['date'].fillna(default_datetime)
     cleaned_temp_df = cleaned_temp_df.fillna("Missing")
 
-    # Select relevant columns for the final DataFrame
     cleaned_temp_df = cleaned_temp_df[['student_id', 'date', 'Start DateTime', 'End DateTime', 
                                        'shelves_completed', 'start_call', 'end_call', 'Duration']]
-
     return cleaned_temp_df
 
 
 
 
 def get_student_id_from_db(first_name):
-    # Query the database using only the first name
     student = Student.query.filter_by(student_fname=first_name).first()
     
     if student:
@@ -807,17 +809,30 @@ def get_student_id_from_db(first_name):
         print(f"Warning: Student with first name {first_name} not found in the database!")
         return np.nan
 
+def normalize_floor_name(name):
+    # Convert ordinals (e.g., '6th', '3rd') to cardinal numbers ('6', '3')
+    name = re.sub(r'(\d+)(st|nd|rd|th)', r'\1', name.lower())
+    # Remove common terms to standardize
+    name = re.sub(r'\b(floor|copy|sr)\b', '', name).strip()
+    return name
 
+def get_floor_id_from_path(excel_file_path):
+    file_name = os.path.basename(excel_file_path).replace(".xlsx", "").lower()
+    file_name_normalized = normalize_floor_name(file_name)
+
+    all_floors = Floor.query.all()
+    for floor in all_floors:
+        floor_name_normalized = normalize_floor_name(floor.floor)
+        if floor_name_normalized in file_name_normalized:
+            return floor.floor_id
+
+    raise ValueError(f"No matching floor name found in the FLOOR table for '{file_name}'.")
 
 def insert_data_to_db(csv_file_path, excel_file_path):
-    # Extract floor ID from the excel file path
-    floor_name = os.path.basename(excel_file_path).split('_')[1]
-    floor_id = int(floor_name)
+    floor_id = int(get_floor_id_from_path(excel_file_path))
 
-    # Extract collection name from the CSV file path (before the dot)
     collection_name = os.path.basename(csv_file_path).split('.')[0].replace('_edited', '')
 
-    # Check if collection exists in the database
     collection = Collections.query.filter_by(collection=collection_name).first()
     if collection is None:
         print(f"Warning: Collection with name {collection_name} not found!")
@@ -825,29 +840,24 @@ def insert_data_to_db(csv_file_path, excel_file_path):
     else:
         collection_id = collection.collection_id
 
-    # Read the CSV file into a DataFrame
     df = pd.read_csv(csv_file_path)
-    inserted_count = 0  # Counter for successfully inserted records
+    inserted_count = 0 
 
-    # Iterate over the rows in the DataFrame
     for _, row in df.iterrows():
-        # Ensure that 'student_id' is in the row and is not NaN
         if 'student_id' not in row or pd.isna(row['student_id']):
             print(f"Error: Missing student ID in row for {row['Name']}")
-            continue  # Skip rows with missing student ID
+            continue 
 
-        student_id = row['student_id']  # Use the student_id directly from the row
+        student_id = row['student_id']
 
-        # Convert the date and datetime columns to proper Python datetime objects
         try:
-            date = datetime.strptime(str(row['date']), '%Y-%m-%d').date()  # Ensure date is in YYYY-MM-DD format
+            date = datetime.strptime(str(row['date']), '%Y-%m-%d').date()
             start_time = datetime.strptime(str(row['Start DateTime']), '%Y-%m-%d %H:%M:%S')
             end_time = datetime.strptime(str(row['End DateTime']), '%Y-%m-%d %H:%M:%S')
         except ValueError as e:
             print(f"Error parsing date/time for student {student_id}: {e}")
-            continue  # Skip rows with invalid date/time formats
+            continue 
 
-        # Check if a record with the same student_id, date, and start_time already exists
         existing_record = ShelfReading.query.filter_by(
             date=date,
             start_time=start_time,
@@ -855,7 +865,6 @@ def insert_data_to_db(csv_file_path, excel_file_path):
         ).first()
 
         if existing_record is None:
-            # Create a new record if no existing record was found
             new_record = ShelfReading(
                 date=date,
                 start_time=start_time,
@@ -868,18 +877,108 @@ def insert_data_to_db(csv_file_path, excel_file_path):
                 floor_id=floor_id,
                 collection_id=collection_id
             )
-            db.session.add(new_record)  # Add the new record to the session
+            db.session.add(new_record) 
             db.session.commit()
             print(f"Inserted new record for student ID {row['student_id']} at floor {floor_id} and collection {collection_name}.")
-            inserted_count += 1  # Increment count for successful insertions
+            inserted_count += 1 
         else:
-            # If a duplicate is found, skip inserting
             print(f"Duplicate found for student {row['student_id']} on {row['date']} at {row['Start DateTime']} - Skipping insert.")
 
-    # Return a summary of the insertion process
     return f"{inserted_count} records successfully inserted into the database."
 
+
+#All student data
+def update_student_data(student_id):
+    student = db.session.query(Student).filter(Student.student_id == student_id).first()
+
+    if not student:
+        total_shelfreads = 0
+        total_problem_items = 0
+        total_in_house = 0
+        total_shelving = 0
+        total_holds_list = 0
+        total_rm_list = 0
+    else:
+        total_shelfreads = db.session.query(func.count(ShelfReading.student_id)).filter(ShelfReading.student_id == student_id).scalar()
+        total_problem_items = db.session.query(func.count(Problem.student_id)).filter(Problem.student_id == student_id).scalar()
+        total_in_house = db.session.query(func.count(InHouse.student_id)).filter(InHouse.student_id == student_id).scalar()
+        total_shelving = db.session.query(func.count(Shelving.student_id)).filter(Shelving.student_id == student_id).scalar()
+        total_holds_list = db.session.query(func.count(HoldList.student_id)).filter(HoldList.student_id == student_id).scalar()
+        total_rm_list = db.session.query(func.count(RmList.student_id)).filter(RmList.student_id == student_id).scalar()
+
+    task_id = 1  
+    
+    student_data = Student_Data(
+        student_id=student_id,
+        task_id=task_id,
+        total_shelfreads=total_shelfreads,
+        total_problem_items=total_problem_items,
+        total_in_house=total_in_house,
+        total_shelving=total_shelving,
+        total_holds_list=total_holds_list,
+        total_rm_list=total_rm_list
+    )
+
+    db.session.add(student_data)
+    db.session.commit()
+
+    return f"Data for student {student_id} has been updated successfully!"
+
+
+@app.route('/supervisor-student-overall-view', methods=['GET', 'POST'])
+def supervisor_student_overall_view():
+    # Get the search query from the URL parameters
+    search_query = request.args.get('search_query', '').lower()
+
+    # Assuming you want to update the data for a specific student (you can modify this logic as needed)
+    student_id_to_update = "some_student_id"  # Replace with actual logic to get the student ID if needed
+    update_student_data(student_id_to_update)  # Call the function to update the student data for this student
+
+    # Build the query for filtering students
+    query = db.session.query(
+        Student.student_id,
+        Student.student_fname,
+        Student.student_lname,
+        Student_Data.total_shelfreads,
+        Student_Data.total_problem_items,
+        Student_Data.total_in_house,
+        Student_Data.total_shelving,
+        Student_Data.total_holds_list,
+        Student_Data.total_rm_list
+    ).join(Student_Data, Student.student_id == Student_Data.student_id)
+
+    if search_query:
+        # Filter by the student's first or last name
+        query = query.filter(
+            or_(
+                Student.student_fname.ilike(f"%{search_query}%"),
+                Student.student_lname.ilike(f"%{search_query}%")
+            )
+        )
+
+    # Make sure the results are distinct and ordered by student_id
+    students_data = query.distinct().order_by(Student.student_id).all()
+
+    return render_template('supervisor-student-overall-view.html', students_data=students_data)
+
             
+# supervisor Routes
+@app.route('/supervisor-student-list-view')
+def supervisor_student_list_view():
+    students = Student.query.order_by(Student.student_id).all()
+    search_query = request.args.get('search_query', '').lower()
+    
+    if search_query:
+        # Filter by the student's first or last name
+        query = query.filter(
+            or_(
+                Student.student_fname.ilike(f"%{search_query}%"),
+                Student.student_lname.ilike(f"%{search_query}%")
+            )
+        )
+    return render_template('supervisor-student-list-view.html', students=students)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
 

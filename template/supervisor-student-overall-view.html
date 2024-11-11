@@ -1,73 +1,51 @@
-{%extends 'supervisor-navbar-base.html'%}
+{% extends 'supervisor-navbar-base.html' %}
 
-{%block page_title%}
+{% block page_title %}
 Students (Overall View)
-{%endblock%}
+{% endblock %}
 
-{%block child_content%}
+{% block child_content %}
 <p>Students (Overall View)</p>
-{%endblock%}
+{% endblock %}
 
-{%block page_content%}
+{% block page_content %}
 <div class="container">
     <div class="row mt-2">
-        <form class="col-10 form-inline my-2 my-lg-0" id="search_form">
-            <input  class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search_bar">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="search_button">Search</button>
-        </form>
+      <form class="col-10 form-inline my-2 my-lg-0" id="search_form" action="{{ url_for('supervisor_student_overall_view') }}" method="get">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search_bar" name="search_query" value="{{ request.args.get('search_query', '') }}">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="search_button">Search</button>
+      </form>
         <a class="col-2" href="/supervisor-student-list-view" id="switch_view_button">Switch View</a>
-        
     </div>
     <div class="row ps-2 pe-5">
-
-   
-
         <table class="table mt-4 table-hover mytable" id="student_list_view_table">
             <thead>
               <tr>
-                <th scope="col">Rank</th>
+                <th scope="col">ID</th>
                 <th scope="col">Student</th>
                 <th class="student_overall_view_number" scope="col">Shelfreads</th>
-                <th class="student_overall_view_number"scope="col">Problem Items</th>
+                <th class="student_overall_view_number" scope="col">Problem Items</th>
                 <th class="student_overall_view_number" scope="col">In-House</th>
                 <th class="student_overall_view_number" scope="col">Shelving</th>
                 <th class="student_overall_view_number" scope="col">Holds List</th>
                 <th class="student_overall_view_number" scope="col">RM List</th>
-                <th class="student_overall_view_number" scope="col">Hours Worked</th>
-                {% if current_user.role in ['ADMIN', 'supervisor'] %}
-                <th>Actions</th>
-                {% endif %}
               </tr>
             </thead>
             <tbody>
-              <tr class="clickable-row" id="student_overall_view_row" data-href="/supervisor-student">
                 {% for each_student in students %}
-                <td class="ml-2"><a href="{{ url_for('student_view', student_id=each_student['student_id']) }}">{{ each_student['last_name'] }}</a></td>
-                <td>{{ each_student['student_fname','student_lname'] }}</td>
-                <td class="student_overall_view_number">{{ each_student['student_shelfreads'] }}</td>
-                <td class="student_overall_view_number">{{ each_student['student_problem_items'] }}</td>
-                <td class="student_overall_view_number">{{ each_student['student_in_house'] }}</td>
-                <td class="student_overall_view_number">{{ each_student['student_shelving'] }}</td>
-                <td class="student_overall_view_number">{{ each_student['student_holds_list'] }}</td>
-                <td class="student_overall_view_number">{{ each_student['student_rm_list'] }}</td>
-                <td class="student_overall_view_number">{{ each_student['student_hours_worked'] }}</td>
-                {% if current_user.role in ['ADMIN', 'supervisor'] %}
-                  <td>
-                      <a href="{{ url_for('student_edit', student_id=each_student['student_id']) }}" class="btn btn-secondary" role="button">Edit</a>
-                      {% if current_user.role in ['ADMIN'] %}
-                      <a href="{{ url_for('student_delete', student_id=each_student['student_id']) }}" class="btn btn-secondary" role="button">Delete</a>
-                      {% endif %}
-                  </td>
-                  {% endif %}
-                  {% endfor %}
-              </tr>
-              
+                <tr class="clickable-row" id="student_overall_view_row" data-href="{{ url_for('student_view', student_id=each_student['student_id']) }}">
+                  <td><a href="{{ url_for('student_view', student_id=each_student['student_id']) }}">{{ each_student['student_id'] }}</a></td>
+                    <td><a href="{{ url_for('student_view', student_id=each_student['student_id']) }}">{{ each_student['student_fname'] }} {{ each_student['student_lname'] }}</a></td>
+                    <td class="student_overall_view_number">{{ each_student['student_shelfreads'] }}</td>
+                    <td class="student_overall_view_number">{{ each_student['student_problem_items'] }}</td>
+                    <td class="student_overall_view_number">{{ each_student['student_in_house'] }}</td>
+                    <td class="student_overall_view_number">{{ each_student['student_shelving'] }}</td>
+                    <td class="student_overall_view_number">{{ each_student['student_holds_list'] }}</td>
+                    <td class="student_overall_view_number">{{ each_student['student_rm_list'] }}</td>
+                </tr>
+                {% endfor %}
             </tbody>
-          </table>
+        </table>
     </div>
 </div>
-
-
-
-
-{%endblock%}
+{% endblock %}

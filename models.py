@@ -48,29 +48,7 @@ class supervisor(db.Model):
     def __repr__(self):
         return f"User ID: {self.supervisor_fname} {self.supervisor_lname}"
 
-# table for student information
-# THIS IS COMPLETE!!!
-# class Student(db.Model):
-#     __tablename__ = 'STUDENT'
-#     student_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-#     student_fname = db.Column(db.VARCHAR(50), nullable=False)
-#     student_lname = db.Column(db.VARCHAR(50), nullable=False)
-#     student_email = db.Column(db.VARCHAR(100), nullable=False, unique=True)
-#     student_username = db.Column(db.VARCHAR(100), nullable=False, unique=True)
-#     student_password = db.Column(db.VARCHAR(30), nullable=False)
-    
-#     def __init__(self, student_id, student_fname, student_lname, student_email, student_username, student_password):
-#         self.student_id = student_id
-#         self.student_fname = student_fname
-#         self.student_lname = student_lname
-#         self.student_email = student_email
-#         self.student_username = student_username
-#         self.student_password = student_password
 
-#     def get_id(self):
-#         return self.student_id
-#     def __repr__(self):
-#         return f'User ID: {self.student_id}'
 
 class Student(db.Model):
     __tablename__ = 'STUDENT'
@@ -236,7 +214,7 @@ class InHouse(db.Model):
     end_time = db.Column(db.DateTime, nullable=False)
     total_retrieved = db.Column(db.Integer, nullable=False)
     # student_id FK referencing STUDENT table
-    student_id = db.Column(db.CHAR(10), db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
     # location_id FK referencing LOCATION table
     location_id = db.Column(db.CHAR(5), db.ForeignKey('LOCATION.location_id'), nullable=False)
 
@@ -266,7 +244,7 @@ class ShelfReading(db.Model):
     start_call = db.Column(db.VARCHAR(20), nullable=False)
     end_call = db.Column(db.VARCHAR(20), nullable=False)
     # student_id FK referencing STUDENT table
-    student_id = db.Column(db.CHAR(10), db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
     # location_id FK referencing LOCATION table
     floor_id = db.Column(db.CHAR(5), db.ForeignKey('FLOOR.floor_id'), nullable=False)
     collection_id = db.Column(db.CHAR(5), db.ForeignKey('COLLECTIONS.collection_id'), nullable=False)
@@ -284,6 +262,9 @@ class ShelfReading(db.Model):
         self.floor_id = floor_id
         self.collection_id = collection_id
 
+    student = db.relationship('Student', backref='shelf_readings', lazy='joined')
+    collection = db.relationship('Collections', backref='shelf_readings', lazy='joined')
+    
     # string representation
     def __repr__(self):
         return (f'{self.student_id}: {self.date} {self.start_time} {self.end_time} {self.duration} '
@@ -298,7 +279,7 @@ class Shelving(db.Model):
     total_shelving = db.Column(db.Integer, nullable=False)
     
     # student_id FK referencing STUDENT table
-    student_id = db.Column(db.CHAR(10), db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
     
     # location_id FK referencing LOCATION table
     floor_id = db.Column(db.CHAR(5), db.ForeignKey('FLOOR.floor_id'), nullable=False)
@@ -306,9 +287,6 @@ class Shelving(db.Model):
     start_call = db.Column(db.VARCHAR(20), nullable=False)
     end_call = db.Column(db.VARCHAR(20), nullable=False)
     collection_id = db.Column(db.CHAR(5), db.ForeignKey('COLLECTIONS.collection_id'), nullable=False)
-
-    # Define the relationship to the Student model
-    student = db.relationship('Student', backref='shelvings', lazy=True)
 
     def __init__(self, date, start_time, end_time, total_shelving, student_id, floor_id, start_call, end_call, collection_id):
         self.date = date
@@ -334,7 +312,7 @@ class ILL(db.Model):
     end_time = db.Column(db.DateTime, nullable=False)
     total_ill = db.Column(db.Integer, nullable=False)
     # student_id FK referencing STUDENT table
-    student_id = db.Column(db.CHAR(10), db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
     # location_id FK referencing LOCATION table
     location_id = db.Column(db.CHAR(5), db.ForeignKey('LOCATION.location_id'), nullable=False)
 
@@ -361,7 +339,7 @@ class RmList(db.Model):
     end_time = db.Column(db.DateTime, nullable=False)
     total_rm = db.Column(db.Integer, nullable=False)
     # student_id FK referencing STUDENT table
-    student_id = db.Column(db.CHAR(10), db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
     # location_id FK referencing LOCATION table
     location_id = db.Column(db.CHAR(5), db.ForeignKey('LOCATION.location_id'), nullable=False)
 
@@ -388,7 +366,7 @@ class HoldList(db.Model):
     end_time = db.Column(db.DateTime, nullable=False)
     total_holds = db.Column(db.Integer, nullable=False)
     # student_id FK referencing STUDENT table
-    student_id = db.Column(db.CHAR(10), db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
     # location_id FK referencing LOCATION table
     location_id = db.Column(db.CHAR(5), db.ForeignKey('LOCATION.location_id'), nullable=False)
 
@@ -426,17 +404,19 @@ class ProblemList(db.Model):
 # table for problem logging
 class Problem(db.Model):
     __tablename__ = 'PROBLEM'
-    student_id = db.Column(db.CHAR(10), db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey('STUDENT.student_id'), primary_key=True, nullable=False)
     date = db.Column(db.DATE, primary_key=True, nullable=False)
     call_no = db.Column(db.VARCHAR, primary_key=True, nullable=False)
     problem_id = db.Column(db.CHAR(5), db.ForeignKey('PROBLEM_LIST.problem_id'), nullable=True)
+    total_problems = db.Column(db.Integer, nullable=False)
 
     # creating problem object
-    def __init__(self, student_id, date, call_no, problem_id):
+    def __init__(self, student_id, date, call_no, problem_id, total_problems):
         self.student_id = student_id
         self.date = date
         self.call_no = call_no
         self.problem_id = problem_id
+        self.total_problems = total_problems
 
     # string representation
     def __repr__(self):

@@ -1,14 +1,14 @@
-{%extends 'supervisor-navbar-base.html'%}
+{% extends 'supervisor-navbar-base.html' %}
 
-{%block page_title%}
+{% block page_title %}
 Administrator Dashboard
-{%endblock%}
+{% endblock %}
 
-{%block child_content%}
+{% block child_content %}
 <p>Dashboard</p>
-{%endblock%}
- 
-{%block page_content%}
+{% endblock %}
+
+{% block page_content %}
 <div class="container justify-content-center mb-5">
     <div class="row">
         <div class="col-md-8">
@@ -18,40 +18,40 @@ Administrator Dashboard
                 <div class="row">
                     <div class="col section me-2 pt-2 ms-2">
                         <img src="" alt="">
-                        <h4 class="topic"><b>148</b></h4>
-                        <p class="subtitle">Total Shelved</p>
+                        <h4 class="topic"><b>{{ total_shelved }}</b></h4>
+                        <p class="subtitle">Total ShelfReads</p>
                     </div>
                     <div class="col section me-2 pt-2 ms-2">
                         <img src="" alt="">
-                        <h4 class="topic"><b>148</b></h4>
-                        <p class="subtitle">Total Shelved</p>
+                        <h4 class="topic"><b>{{ total_problem_items }}</b></h4>
+                        <p class="subtitle">Total Problem Items</p>
                     </div>
                     <div class="col section me-2 pt-2 ms-2">
                         <img src="" alt="">
-                        <h4 class="topic"><b>148</b></h4>
-                        <p class="subtitle">Total Shelved</p>
+                        <h4 class="topic"><b>{{ total_in_house }}</b></h4>
+                        <p class="subtitle">Total In-House</p>
                     </div>
                     <div class="col section me-2 pt-2 ms-2">
                         <img src="" alt="">
-                        <h4 class="topic"><b>148</b></h4>
-                        <p class="subtitle">Total Shelved</p>
+                        <h4 class="topic"><b>{{ total_shelving }}</b></h4>
+                        <p class="subtitle">Total Shelving</p>
                     </div>
                     <div class="col section me-2 pt-2 ms-2">
                         <img src="" alt="">
-                        <h4 class="topic"><b>148</b></h4>
-                        <p class="subtitle">Total Shelved</p>
+                        <h4 class="topic"><b>{{ total_holds_list }}</b></h4>
+                        <p class="subtitle">Total Holds List</p>
                     </div>
                     <div class="col section me-2 pt-2 ms-2">
                         <img src="" alt="">
-                        <h4 class="topic"><b>148</b></h4>
-                        <p class="subtitle">Total Shelved</p>
+                        <h4 class="topic"><b>{{ total_rm_list }}</b></h4>
+                        <p class="subtitle">Total RM List</p>
                     </div>
                 </div>
             </div>
             <div class="section pt-3"> 
                 <h4 class="topic"><b>Books Shelved</b></h4>
                 <p class="subtitle">February 2023</p>
-                <img class="img-fluid" src="static\images\Screenshot 2024-05-18 023232.png" alt="">
+                <img class="img-fluid" src="static/images/Screenshot 2024-05-18 023232.png" alt="">
             </div>
         </div>
         <div class="col-md-4 section pt-3">
@@ -65,18 +65,14 @@ Administrator Dashboard
                   </tr>
                 </thead>
                 <tbody>
-
                     <!-- Input data from inbox database here -->
-                    
-                    <tr class='clickable-row' data-href="/">
+                    <tr class="clickable-row" data-href="/">
                         <td class="td-left">Jack Frost</td>
                         <td class="td-right">Hi Amy, I found a weird book...</td>
                     </tr>
-                    
                     <!-- End -->
-                    
                 </tbody>
-              </table>
+            </table>
         </div>
     </div>
     <div class="row">
@@ -93,24 +89,14 @@ Administrator Dashboard
                       </tr>
                     </thead>
                     <tbody>
+                      {% for performer in top_performers %}
                       <tr>
-                        <th scope="row" class="rank-table">1</th>
-                        <td class="student-name">Emily Stone</td>
-                        <td><img class="progress_bar" src="static\images\Screenshot 2024-05-18 023550.png" alt=""></td>
-                        <td class="level">Superstar</td>
+                        <th scope="row" class="rank-table">{{ loop.index }}</th>
+                        <td class="student-name">{{ performer[0] }} {{ performer[1] }}</td>
+                        <td><img class="progress_bar" src="static/images/Screenshot 2024-05-18 023550.png" alt=""></td>
+                        <td class="level">{{ performer[2] }}</td>
                       </tr>
-                      <tr>
-                        <th scope="row" class="rank-table">2</th>
-                        <td class="student-name">Bob Smith</td>
-                        <td><img class="progress_bar" src="static\images\Screenshot 2024-05-18 023550.png" alt=""></td>
-                        <td class="level">Superstar</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">3</th>
-                        <td class="student-name">Jack Frost</td>
-                        <td><img class="progress_bar" src="static\images\Screenshot 2024-05-18 023550.png" alt=""></td>
-                        <td class="level">Superstar</td>
-                      </tr>
+                      {% endfor %}
                     </tbody>
                   </table>
             </div>
@@ -121,4 +107,4 @@ Administrator Dashboard
         </div>
     </div>
 </div>
-{%endblock%}
+{% endblock %}

@@ -12,8 +12,8 @@ Students (List View)
 <div class="container">
     <div class="row mt-2">
       <div class="supervisor-student-list-search">
-        <form class="col-10 form-inline my-2 my-lg-0" id="search_form">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search_bar">
+        <form class="col-10 form-inline my-2 my-lg-0" id="search_form" action="{{ url_for('supervisor_student_overall_view') }}" method="get">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search_bar" name="search_query" value="{{ request.args.get('search_query', '') }}">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="search_button">Search</button>
         </form>
       </div>
@@ -67,19 +67,5 @@ Students (List View)
           </table>
     </div>
 </div>
-
-<!-- <div id="student-list-pagination-div" class="d-flex justify-content-center mt-4"> 
-  <nav id="student-list-pagination" aria-label="Page navigation example">
-    <ul class="pagination">
-      <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-      <li class="page-item"><a class="page-link" href="#">1</a></li>
-      <li class="page-item"><a class="page-link" href="#">2</a></li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
-      <li class="page-item"><a class="page-link" href="#">Next</a></li>
-    </ul>
-  </nav>
-</div> -->
-
-
 
 {%endblock%}
