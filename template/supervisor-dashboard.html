@@ -9,6 +9,8 @@ Administrator Dashboard
 {% endblock %}
 
 {% block page_content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <div class="container justify-content-center mb-5">
     <div class="row">
         <div class="col-md-8">
@@ -18,12 +20,12 @@ Administrator Dashboard
                 <div class="row">
                     <div class="col section me-2 pt-2 ms-2">
                         <img src="" alt="">
-                        <h4 class="topic"><b>{{ total_shelved }}</b></h4>
+                        <h4 class="topic"><b>{{ total_shelfreads }}</b></h4>
                         <p class="subtitle">Total ShelfReads</p>
                     </div>
                     <div class="col section me-2 pt-2 ms-2">
                         <img src="" alt="">
-                        <h4 class="topic"><b>{{ total_problem_items }}</b></h4>
+                        <h4 class="topic"><b>{{ total_problems }}</b></h4>
                         <p class="subtitle">Total Problem Items</p>
                     </div>
                     <div class="col section me-2 pt-2 ms-2">
@@ -38,41 +40,115 @@ Administrator Dashboard
                     </div>
                     <div class="col section me-2 pt-2 ms-2">
                         <img src="" alt="">
-                        <h4 class="topic"><b>{{ total_holds_list }}</b></h4>
+                        <h4 class="topic"><b>{{ total_holds }}</b></h4>
                         <p class="subtitle">Total Holds List</p>
                     </div>
                     <div class="col section me-2 pt-2 ms-2">
                         <img src="" alt="">
-                        <h4 class="topic"><b>{{ total_rm_list }}</b></h4>
+                        <h4 class="topic"><b>{{ total_rm }}</b></h4>
                         <p class="subtitle">Total RM List</p>
                     </div>
                 </div>
             </div>
             <div class="section pt-3"> 
-                <h4 class="topic"><b>Books Shelved</b></h4>
-                <p class="subtitle">February 2023</p>
-                <img class="img-fluid" src="static/images/Screenshot 2024-05-18 023232.png" alt="">
+                <h3>Shelfreads</h3>
+                <canvas id="shelfreadsChart"></canvas>
+                <script>
+                    // Data from Flask passed into the template
+                    const shelfreadsData = {{ shelfreads_data | tojson }};
+                    
+                    // Function to get the day name from a date (e.g., Sun, Mon, Tue, etc.)
+                    function getDayName(dateString) {
+                        const date = new Date(dateString);
+                        const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                        return daysOfWeek[date.getDay()];
+                    }
+                
+                    // Get the chart context
+                    const ctx = document.getElementById('shelfreadsChart').getContext('2d');
+                
+                    // Create a gradient color for the background (top to bottom)
+                    const gradientBackground = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
+                    gradientBackground.addColorStop(0, 'rgba(0, 255, 209, 0.6)'); // Lighter color at the top
+                    gradientBackground.addColorStop(0.7, 'rgba(187, 0, 203, 0.5)'); // Darker color at the bottom
+                    gradientBackground.addColorStop(1, 'rgba(255, 255, 255, 0.2)');
+                
+                    // Convert the date labels to day names (Sun, Mon, Tue, etc.)
+                    const dayNames = shelfreadsData.dates.map(getDayName);
+                
+                    // Chart.js setup
+                    new Chart(ctx, {
+                        type: 'line', // Line chart
+                        data: {
+                            labels: dayNames, // Use the day names as labels
+                            datasets: [{
+                                data: shelfreadsData.shelfreads_completed,
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                backgroundColor: gradientBackground, // Use the gradient as the background
+                                fill: true,  // Fill the area under the curve
+                                tension: 0.4, // Smooth line effect
+                                pointRadius: 2, // Remove points on the line
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    display: false // Hides the legend
+                                },
+                                tooltip: {
+                                    enabled: true, // Enable tooltips
+                                    mode: 'nearest', // Ensures it shows on the closest point
+                                    callbacks: {
+                                        title: function(tooltipItem) {
+                                            // Display the date for the point hovered
+                                            const dateIndex = tooltipItem[0].dataIndex;
+                                            return shelfreadsData.dates[dateIndex]; 
+                                        },
+                                        label: function(tooltipItem) {
+                                            // Display the number of shelf reads completed
+                                            return 'Shelf Reads: ' + tooltipItem.raw;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                    },
+                                    grid: {
+                                        display: false // Remove vertical grid lines
+                                    }
+                                },
+                                y: {
+                                    title: {
+                                        display: false,
+                                    },
+                                    grid: {
+                                        borderColor: 'rgba(0,0,0,0)', // Remove border for the horizontal lines
+                                        color: 'rgba(0, 0, 0, 0.1)', // Light grid line color
+                                        lineWidth: 1, // Line width for grid lines
+                                        drawBorder: false, // Don't draw the border of the y-axis
+                                        borderDash: [5, 5], // Make the horizontal lines dashed
+                                    }
+                                }
+                            },
+                            layout: {
+                                padding: {
+                                    top: 20, // Add padding to ensure proper space from the top
+                                    bottom: 20, // Add padding to ensure proper space at the bottom
+                                }
+                            }
+                        }
+                    });
+                </script>
+                
+                
+                
+                          
+                
             </div>
-        </div>
-        <div class="col-md-4 section pt-3">
-            <h4 class="topic"><b>Inbox</b></h4>
-            <p class="subtitle">New Messages</p>
-            <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Message</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    <!-- Input data from inbox database here -->
-                    <tr class="clickable-row" data-href="/">
-                        <td class="td-left">Jack Frost</td>
-                        <td class="td-right">Hi Amy, I found a weird book...</td>
-                    </tr>
-                    <!-- End -->
-                </tbody>
-            </table>
         </div>
     </div>
     <div class="row">
