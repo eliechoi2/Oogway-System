@@ -270,7 +270,6 @@ input#search_bar {
     margin-right: 1%;
 }
 
-
 button#search_button {
     width: 10%;
     font-family: 'Poppins';
@@ -324,15 +323,45 @@ tr#student_list_view_row {
     color: black;
 }
 
+label {
+    font-family: Poppins;
+    font-size: .8vw;
+    font-weight: 100;
+}
+
+
+.custom-form {
+    font-family: Poppins;
+    font-size: 0.8vw; /* Consider using `rem` or `px` for better control */
+    font-weight: 100;
+    color: gray;
+    border: none;
+    box-shadow: 0px 2px 5px 0px rgb(231, 231, 231);
+    background-color: white;
+    padding: 8%; /* Adjust as needed */
+    border-radius: 15px;
+}
+
+
 #student-list-pagination {
     color: black;
     font-size: 80%;
 }
+#student-list-pagination-div {
+    position: absolute; 
+    bottom: 0; 
+    left: 0; 
+    right: 0; 
+    text-align: center; 
+    padding: 10px 0; 
+}
 
+.pagination {
+    margin: 0; 
+}
 
-/* Admin Student Overall View Styling */
 .student_overall_view_number {
-    text-align: center;
+    text-align: left;
 }
 
 tr#student_overall_view_row {
@@ -434,7 +463,7 @@ div#stack-dropdown-button {
 }
 
 #search_bar_stack {
-    width: 60%;
+    width: 100%;
     background-color: #FCFCFC;
     border: none;
     font-family: 'Poppins';
@@ -445,7 +474,7 @@ div#stack-dropdown-button {
 }
 
 #search_button_stack {
-    width: 30%;
+    width: 100%;
     background-color: black;
     border: none;
     font-family: 'Poppins';
@@ -461,3 +490,58 @@ div#stack-dropdown-button {
 #stack_search_li {
     padding: 0;
 }
+
+#search_form {
+    width: 100%;
+    padding:0;
+}
+
+.input-data-form {
+    width: 100%;
+    margin-top: 10%;
+}
+
+
+.manager-student-list-search {
+    display:inline-block;
+}
+
+.manager-student-list-buttons {
+    display:inline-block;
+}
+
+.btn.btn-primary.mt-2 {
+    background-color: black;
+    border-color: black;
+    color: white;
+}
+
+.btn.btn-primary.mt-2:hover {
+    background-color: #00FFD1;
+    border-color: #00FFD1;
+    color: white;
+}
+
+#task_id {
+    padding-top: 4%;
+    padding-bottom: 4%;
+    width: 40%;
+    margin-bottom: 5%;
+}
+
+.row.justify-content-center.task-button {
+    margin-top: 5%;
+}
+
+#submit_button {
+    background-color: #00FFD1;
+    color: white;
+    border: #00FFD1;
+}
+
+#submit_button:hover {
+    background-color: black;
+    color: white;
+    border: black;
+}
+

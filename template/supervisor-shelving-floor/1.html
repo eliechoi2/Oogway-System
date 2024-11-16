@@ -1,0 +1,70 @@
+{% extends 'supervisor-navbar-base.html' %}
+
+{% block page_title %}
+{{ floor.floor }}
+{% endblock %}
+
+{% block child_content %}
+<p>{{ floor.floor }}</p>
+{% endblock %}
+
+{% block page_content %}
+<div class="container">
+    <ul class="nav nav-tabs" id="floorTabs" role="tablist">
+        {% for collection in collections %}
+            <li class="nav-item" role="presentation">
+                <a class="nav-link {% if loop.first %}active{% endif %}" id="collection-{{ collection.collection_id }}-tab" data-bs-toggle="tab" href="#collection-{{ collection.collection_id }}" role="tab" aria-controls="collection-{{ collection.collection_id }}" aria-selected="true">
+                    {{ collection.collection }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="tab-content" id="floorTabsContent">
+        {% for collection in collections %}
+            <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="collection-{{ collection.collection_id }}" role="tabpanel" aria-labelledby="collection-{{ collection.collection_id }}-tab">
+                <table class="table mt-4 table-hover mytable">
+                    <thead>
+                        <tr class="floor_tr">
+                            <th scope="col">Student</th>
+                            <th class="floor_data" scope="col">Date</th>
+                            <th class="floor_data" scope="col">Start Time</th>
+                            <th class="floor_data" scope="col">End Time</th>
+                            <th class="floor_data" scope="col">Duration</th>
+                            <th class="floor_data" scope="col">Shelves Completed</th>
+                            <th class="floor_data" scope="col">Start Call #</th>
+                            <th class="floor_data" scope="col">End Call #</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for shelfreading in shelfreadings %}
+                            {% if shelfreading.collection_id == collection.collection_id %}
+                                <tr class="clickable-row" id="student_overall_view_row" data-href="/admin-student">
+                                    <td>{{ shelfreading.student.first_name }} {{ shelfreading.student.last_name }}</td>
+                                    <td class="floor_data">
+                                        {% set month, day, year = shelfreading.date.strftime('%m/%d/%Y').split('/') %}
+                                        {{ month | int }}/{{ day | int }}/{{ year }}
+                                    </td>
+                                    <td class="floor_data">{{ shelfreading.start_time.strftime('%I:%M %p').lstrip('0') }}</td>
+                                    <td class="floor_data">{{ shelfreading.end_time.strftime('%I:%M %p').lstrip('0') }}</td>
+                                    <td class="floor_data">
+                                        {% set duration = (shelfreading.end_time - shelfreading.start_time).total_seconds() / 3600 %}
+                                        {% if duration < 0 %}
+                                            Invalid
+                                        {% else %}
+                                            {{ "%.2f"|format(duration) }} hours
+                                        {% endif %}
+                                    </td>
+                                    <td class="floor_data">{{ shelfreading.shelves_completed }}</td>
+                                    <td class="floor_data">{{ shelfreading.start_call }}</td>
+                                    <td class="floor_data">{{ shelfreading.end_call }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

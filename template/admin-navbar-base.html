@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -21,7 +20,7 @@
             <li class="navbar-li active">
                 <a href="/admin-dashboard" class="image-container">
                     <img class="front" src="static\images\home-gray.png"alt="First Image">
-                    <img class="back" src="static\images\home-white.png" alt="Second Image">
+                    <img cl ass="back" src="static\images\home-white.png" alt="Second Image">
                     <p class="navbar-item">Dashboard</p>
                 </a>
             </li>
@@ -33,7 +32,7 @@
                 </a>
             </li>
             <li class="navbar-li">
-                <div class="accordion" id="accordion-shelving">
+                <!-- <div class="accordion" id="accordion-shelving">
                     <div class="accordion-item">
                       <h2 class="accordion-header">
                         <div class="image-container">
@@ -47,17 +46,54 @@
                       <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordion-shelving">
                         <div class="accordion-body">
                           <ul class="accordion-list">
-                            <li><a href="/admin-floor">3rd Floor</a></li>
-                            <li><a href="">5th Floor</a></li>
-                            <li><a href="">6th Floor</a></li>
-                            <li><a href="">7th Floor</a></li>
-                            <li><a href="">Others SR</a></li>
-                            <li><a href="">Stacks PS Center</a></li>
+                            <li><a href="/shelving-floor/3.html">3rd Floor</a></li>
+                            <li><a href="/shelving-floor/4.html">4th Floor</a></li>
+                            <li><a href="/shelving-floor/5.html">5th Floor</a></li>
+                            <li><a href="/shelving-floor/6.html">6th Floor</a></li>
+                            <li><a href="/shelving-floor/7.html">7th</a></li>
+                            <li><a href="/shelving-floor/Others.html">Others SR</a></li>
                           </ul>
                         </div>
                       </div>
                     </div>
+                </div> -->
+
+                <div class="accordion" id="accordion-shelving">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <div class="image-container">
+                                <button class="accordion-button collapsed navbar-item" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    <img class="front" src="static\images\floor-gray.png" alt="First Image">
+                                    <img class="back" src="static\images\floor-white.png" alt="Second Image">
+                                    Shelving
+                                </button>
+                            </div>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordion-shelving">
+                            <div class="accordion-body">
+                                <ul class="accordion-list">
+                                    <li><a href="/shelving-floor/3.html">3rd Floor</a></li>
+                                    <li><a href="/shelving-floor/4.html">4th Floor</a></li>
+                                    <li><a href="/shelving-floor/5.html">5th Floor</a></li>
+                                    <li><a href="/shelving-floor/6.html">6th Floor</a></li>
+                                    <li><a href="/shelving-floor/7.html">7th</a></li>
+                                    <li><a href="/shelving-floor/Others.html">Others SR</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+        
+                <!-- Tabbed Navigation for Collections -->
+                <ul class="nav nav-tabs" id="floorTabs" role="tablist">
+                    {% for collection in collections %}
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link {% if loop.first %} active {% endif %}" id="collection-{{ collection.collection_id }}-tab" data-bs-toggle="tab" href="#collection-{{ collection.collection_id }}" role="tab" aria-controls="collection-{{ collection.collection_id }}" aria-selected="{% if loop.first %} true {% else %} false {% endif %}">
+                            {{ collection.collection }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
 
                 <!-- Shelving Submenu -->
                 <ul class="collapse nav flex-column" id="submenu2" data-bs-parent="#menu">

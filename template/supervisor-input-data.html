@@ -1,0 +1,59 @@
+{%extends 'supervisor-navbar-base.html'%}
+
+{%block page_title%}
+Student
+{%endblock%}
+
+{%block child_content%}
+<p class="student-name">Input Data</p>
+{%endblock%}
+
+{%block page_content%}
+<div class="container">
+
+    <div class="row justify-content-center task-button">
+        <div style="width: 50%">
+            <label for="task_id" class="form-label mt-4"><strong>Task</strong></label>
+            <select class="form-select custom-form" id="task_id" name="task_id" required onchange="redirectToTaskPage()">
+                <option value="" disabled selected>Select Task</option>
+                {% for each_task in tasks %}
+                    <option value="{{ each_task.task_id }}"
+                        {% if task_id and task_id == each_task.task_id %} selected {% endif %}>
+                        {{ each_task.task }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <script>
+        function redirectToTaskPage() {
+            const taskSelect = document.getElementById('task_id');
+            const selectedTaskId = taskSelect.value;
+            if (selectedTaskId) {
+                // Redirect to the task page based on the selected task ID
+                window.location.href = `/supervisor-input-data/${selectedTaskId}`;
+            }
+        }
+        </script>
+    </div>  
+
+
+  <h1>Upload Excel File</h1>
+  <form action="{{ url_for('upload_file') }}" method="POST" enctype="multipart/form-data">
+    <label for="file">Choose an Excel file:</label>
+    <input type="file" name="file" id="file" accept=".xls,.xlsx" required>
+    <button type="submit">Upload</button>
+</form>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+    
+{%endblock%}

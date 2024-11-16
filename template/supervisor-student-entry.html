@@ -1,0 +1,107 @@
+{%extends 'supervisor-navbar-base.html'%}
+
+{%block page_title%}
+{% if action and action == 'create' %}
+        Add New Student
+    {% elif action and action == 'update'  %}
+        Update Student
+    {% else %}
+        {% if current_user.role == 'STUDENT' %}
+            View My Record
+        {% else %}
+            View Student
+        {% endif %}
+    {% endif %}
+{%endblock%}
+
+{%block child_content%} 
+    {% if action and action == 'create' %}
+        Add New Student
+    {% elif action and action == 'update'  %}
+        Update Student
+    {% else %}
+        {% if current_user.role == 'STUDENT' %}
+            View My Record
+        {% else %}
+            View Student
+        {% endif %}
+    {% endif %} 
+{%endblock%}
+
+{%block page_content%}
+
+{% if action and action in ['create', 'update'] %}
+<form class="row g-3"
+      action="{{ url_for('student_edit', student_id=student['student_id']) if student else url_for('student_create') }}" method="post">
+{% else %}
+    <div class="row g-3">
+{% endif %}
+
+<div class="col-md-4">
+    {% if action and action in ['create', 'update'] %}
+    <label for="student_fname" class="form-label"><strong>First Name</strong></label>
+    <input type="text" class="form-control" id="student_fname" name="student_fname" value="{{ student['student_fname'] if student else '' }}" required>
+    {% else %}
+        <strong>First Name</strong>
+        <br>{{ student['student_fname'] }}
+    {% endif %}
+  </div>
+  <div class="col-md-4">
+    {% if action and action in ['create', 'update'] %}
+    <label for="student_lname" class="form-label"><strong>Last Name</strong></label>
+    <input type="text" class="form-control" id="student_lname" name="student_lname" value="{{ student['student_lname'] if student else '' }}" required>
+    {% else %}
+        <strong>Last Name</strong>
+        <br>{{ student['student_lname'] }}
+    {% endif %}
+  </div> 
+<div class="col-md-12">
+    {% if action and action in ['create', 'update'] %}
+    <label for="student_email" class="form-label"><strong>Email</strong></label>
+    <input type="student_email" class="form-control" id="student_email" name="student_email" maxlength="100" value="{{ student['student_email'] if student else '' }}" required>
+    {% else %}
+        <strong>Email</strong>
+        <br>{{ student['student_email'] }}
+    {% endif %}
+  </div>
+
+
+  <div class="col-md-4">
+    {% if action and action in ['create', 'update'] %}
+    <label for="student_username" class="form-label"><strong>Username</strong></label>
+    <input type="text" class="form-control" id="student_username" name="student_username" value="{{ student['student_username'] if student else '' }}" required>
+    {% else %}
+        <strong>Username</strong>
+        <br>{{ student['student_username'] }}
+    {% endif %}
+  </div>
+
+  <div class="col-md-4">
+    {% if action and action in ['create', 'update'] %}
+    <label for="student_password" class="student_password"><strong>Password</strong></label>
+    <input type="text" class="form-control" id="student_password" name="student_password" value="{{ student['student_password'] if student else '' }}" required>
+    {% else %}
+        <strong>Password</strong>
+        <br>{{ student['student_password'] }}
+    {% endif %}
+  </div>
+
+  
+  <div class="col-12 text-center">
+    {% if action and action in ['create', 'update'] %}
+    <button class="btn btn-primary" type="submit">{{ 'Add' if action=='create' else 'Update' }} Student</button>
+    {% endif %}
+
+    {% if current_user.role in ['supervisor', 'ADMIN'] %}
+    <a href="{{ url_for('supervisor_student_list_view') }}" class="btn btn-secondary" role="button">
+        {% if action and action in ['create', 'update'] %}
+        Cancel
+        {% else %}
+        Return
+        {% endif %}
+    </a>
+    {% endif %}
+  </div>
+
+  {%endblock%}
+  

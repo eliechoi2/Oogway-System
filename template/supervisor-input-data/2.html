@@ -1,0 +1,60 @@
+{%extends 'supervisor-navbar-base.html'%}
+
+{%block page_title%}
+Problem Items
+{%endblock%}
+
+{%block child_content%}
+<p class="problem_items">Problem Items</p>
+{%endblock%}
+
+{%block page_content%}
+<div class="container">
+
+<form action="{{ url_for('supervisor_input_data_2') }}" method="POST">
+    <!-- Dropdown for Student Name -->
+    <div class="row">
+        <div class="col-2">
+            <label for="student_id" class="form-label mt-4"><strong>Student Name</strong></label>
+            <select class="form-select custom-form" id="student_id" name="student_id" required>
+                <option value="" disabled selected>Select Student</option>
+                {% for student in students %}
+                    <option value="{{ student.student_id }}">{{ student.first_name }} {{ student.last_name }}</option>
+                {% endfor %}
+            </select>
+        </div>        
+        
+        <!-- Input for Number of Shelves Completed -->
+        <div class="col-2">
+            <label for="problem_id" class="form-label mt-4"><strong>Problem Issue</strong></label>
+            <select class="form-select custom-form" id="problem_id" name="problem_id" required>
+                <option value="" disabled selected>Select Problem</option>
+                {% for problem in problems_list %}
+                    <option value="{{ problem.problem_id }}">{{ problem.problem_description }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+    </div>
+    
+    <div class="row">
+        <!-- Date Picker for Date -->
+        <div class="col-2">
+            <label for="date" class="form-label mt-4"><strong>Date</strong></label>
+            <input type="date" id="date" name="date" class="form-control custom-form" required>
+        </div>
+
+        <!-- Call Number -->
+        <div class="col-2">
+            <label for="call_no" class="form-label mt-4"><strong>Call Number</strong></label>
+            <input type="text" class="form-control custom-form" id="call_no" name="call_no" required>
+        </div>
+    </div>
+    
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary mt-4" id="submit_button">Submit</button>
+</form>
+
+
+
+{%endblock%}

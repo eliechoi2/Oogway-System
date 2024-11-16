@@ -1,0 +1,37 @@
+{%extends 'supervisor-navbar-base.html'%}
+
+{%block page_title%}
+In-House
+{%endblock%}
+
+{%block child_content%}
+<p class="in_house">In-House</p>
+{%endblock%}
+
+{%block page_content%}
+<div class="container">
+
+    <form action="{{ url_for('supervisor_input_data_3') }}" method="POST"></form>
+        <div class="row">
+            <div class="col-2">
+                <label for="student_id" class="form-label mt-4"><strong>Student Name</strong></label>
+                <select class="form-select custom-form" id="student_id" name="student_id" required>
+                    <option value="" disabled selected>Select Student</option>
+                    {% for student in students %}
+                        <option value="{{ student.student_id }}">{{ student.first_name }} {{ student.last_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>        
+            <div class="col-2">
+                <label for="total_in_house" class="form-label mt-4"><strong>Quantity</strong></label>
+                <input type="number" id="total_in_house" name="total_in_house" class="form-control custom-form" required min="1">
+            </div>
+            <div class="col-2">
+                <label for="date" class="form-label mt-4"><strong>Date</strong></label>
+                <input type="date" id="date" name="date" class="form-control custom-form" required>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-4" id="submit_button">Submit</button>
+    </form>
+
+{%endblock%}
