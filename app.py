@@ -1044,7 +1044,6 @@ def update_student_data(student_id):
     return f"Data for student {student_id} has been updated successfully!"
 
 
-
 @app.route('/supervisor-student-overall-view', methods=['GET', 'POST'])
 def supervisor_student_overall_view():
     # Get the search query from the URL parameters
@@ -1080,7 +1079,92 @@ def supervisor_student_overall_view():
     # Make sure the results are distinct and ordered by student_id
     students_data = query.distinct().order_by(Student.student_id).all()
 
-    return render_template('supervisor-student-overall-view.html', students_data=students_data)
+    # Define XP values for each task
+    XP_VALUES = {
+        'total_shelfreads': 10,
+        'total_problem_items': 5,
+        'total_in_house': 2,
+        'total_shelving': 8,
+        'total_holds_list': 3,
+        'total_rm_list': 4
+    }
+
+    # Calculate total XP for each student and keep the original data
+    student_xp_data = []
+    for student in students_data:
+        # Extract the task counts for each student
+        total_shelfreads = student.total_shelfreads
+        total_problem_items = student.total_problem_items
+        total_in_house = student.total_in_house
+        total_shelving = student.total_shelving
+        total_holds_list = student.total_holds_list
+        total_rm_list = student.total_rm_list
+
+        # Calculate total XP for the student
+        total_xp = (
+            total_shelfreads * XP_VALUES['total_shelfreads'] +
+            total_problem_items * XP_VALUES['total_problem_items'] +
+            total_in_house * XP_VALUES['total_in_house'] +
+            total_shelving * XP_VALUES['total_shelving'] +
+            total_holds_list * XP_VALUES['total_holds_list'] +
+            total_rm_list * XP_VALUES['total_rm_list']
+        )
+
+        # Append calculated XP along with other data
+        student_xp_data.append({
+            'student_id': student.student_id,
+            'student_fname': student.student_fname,
+            'student_lname': student.student_lname,
+            'total_shelfreads': total_shelfreads,
+            'total_problem_items': total_problem_items,
+            'total_in_house': total_in_house,
+            'total_shelving': total_shelving,
+            'total_holds_list': total_holds_list,
+            'total_rm_list': total_rm_list,
+            'total_xp': total_xp
+        })
+
+    # Return the data to the template
+    return render_template('supervisor-student-overall-view.html', students_data=student_xp_data)
+
+
+
+# @app.route('/supervisor-student-overall-view', methods=['GET', 'POST'])
+# def supervisor_student_overall_view():
+#     # Get the search query from the URL parameters
+#     search_query = request.args.get('search_query', '').lower()
+
+#     # Update data for all students
+#     students = db.session.query(Student).all()  # Get all students
+#     for student in students:
+#         update_student_data(student.student_id)  # Update data for each student
+
+#     # Build the query for filtering students
+#     query = db.session.query(
+#         Student.student_id,
+#         Student.student_fname,
+#         Student.student_lname,
+#         Student_Data.total_shelfreads,
+#         Student_Data.total_problem_items,
+#         Student_Data.total_in_house,
+#         Student_Data.total_shelving,
+#         Student_Data.total_holds_list,
+#         Student_Data.total_rm_list
+#     ).join(Student_Data, Student.student_id == Student_Data.student_id)
+
+#     if search_query:
+#         # Filter by the student's first or last name
+#         query = query.filter(
+#             or_(
+#                 Student.student_fname.ilike(f"%{search_query}%"),
+#                 Student.student_lname.ilike(f"%{search_query}%")
+#             )
+#         )
+
+#     # Make sure the results are distinct and ordered by student_id
+#     students_data = query.distinct().order_by(Student.student_id).all()
+
+#     return render_template('supervisor-student-overall-view.html', students_data=students_data)
 
 
             

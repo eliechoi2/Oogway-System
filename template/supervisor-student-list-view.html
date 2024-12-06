@@ -24,6 +24,18 @@ Students (List View)
         <a href="/supervisor-student-overall-view" id="switch_view_button">Switch View</a>
       </div>
         
+      {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+      <div class="alert-container">
+          {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">
+                  {{ message }}
+              </div>
+          {% endfor %}
+      </div>
+  {% endif %}
+{% endwith %}
+
     </div>
     <div class="row ps-2 pe-5 flex-grow-1">
                 <table class="table mt-4 table-hover mytable" id="student_list_view_table">
@@ -49,10 +61,10 @@ Students (List View)
                         <td class="student_overall_view_number">{{ each_student['student_email'] }}</td>
                         <td class="student_overall_view_number">{{ each_student['student_username'] }}</td>
                         <td class="student_overall_view_number">{{ each_student['student_password'] }}</td>
-                        {% if current_user.role in ['ADMIN', 'supervisor'] %}
+                        {% if current_user.role in ['supervisor'] %}
                         <td>
                             <a href="{{ url_for('student_edit', student_id=each_student['student_id']) }}" class="btn btn-secondary" role="button">Edit</a>
-                            {% if current_user.role in ['ADMIN'] %}
+                            {% if current_user.role in ['supervisor'] %}
                             <a href="{{ url_for('student_delete', student_id=each_student['student_id']) }}" class="btn btn-secondary" role="button">Delete</a>
                             {% endif %}
                         </td>
