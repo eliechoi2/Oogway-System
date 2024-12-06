@@ -4,6 +4,10 @@ div#navbar {
     height: 100vh;
 }
 
+h3 {
+    font-family: 'League Spartan'
+}
+
 #title {
     font-family: 'League Spartan';
     letter-spacing: 5px;

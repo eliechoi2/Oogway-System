@@ -10,7 +10,17 @@ Student
 
 {%block page_content%}
 <div class="container">
-
+    <div class="row">
+        <h3>Upload Excel File</h3>
+        <form action="{{ url_for('upload_file') }}" method="POST" enctype="multipart/form-data">
+          <label for="file">Choose an Excel file:</label>
+          <input type="file" name="file" id="file" accept=".xls,.xlsx" required>
+          <button type="submit" class="btn btn-primary mt-4" id="submit_button">Upload</button>
+      </form>
+    </div>
+  <hr>
+  <div class="row">
+    <h3>Input Manual Data</h3>
     <div class="row justify-content-center task-button">
         <div style="width: 50%">
             <label for="task_id" class="form-label mt-4"><strong>Task</strong></label>
@@ -36,23 +46,18 @@ Student
         }
         </script>
     </div>  
+  </div>
 
-
-  <h1>Upload Excel File</h1>
-  <form action="{{ url_for('upload_file') }}" method="POST" enctype="multipart/form-data">
-    <label for="file">Choose an Excel file:</label>
-    <input type="file" name="file" id="file" accept=".xls,.xlsx" required>
-    <button type="submit">Upload</button>
-</form>
-
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+      <div class="alert-container">
+          {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">
+                  {{ message }}
+              </div>
+          {% endfor %}
+      </div>
+  {% endif %}
 {% endwith %}
 
     
