@@ -21,27 +21,29 @@ Students (Overall View)
         <table class="table mt-4 table-hover mytable" id="student_list_view_table">
             <thead>
                 <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Student</th>
-                    <th class="student_overall_view_number" scope="col">Shelfreads</th>
-                    <th class="student_overall_view_number" scope="col">Problem Items</th>
-                    <th class="student_overall_view_number" scope="col">In-House</th>
-                    <th class="student_overall_view_number" scope="col">Shelving</th>
-                    <th class="student_overall_view_number" scope="col">Holds List</th>
-                    <th class="student_overall_view_number" scope="col">RM List</th>
+                    <th style="text-align: center;" scope="col">ID</th>
+                    <th style="text-align: center;" scope="col">Student</th>
+                    <th style="text-align: center;" scope="col">XP</th>
+                    <th style="text-align: center;" class="student_overall_view_number" scope="col">Shelfreads</th>
+                    <th style="text-align: center;" class="student_overall_view_number" scope="col">Problem Items</th>
+                    <th style="text-align: center;" class="student_overall_view_number" scope="col">In-House</th>
+                    <th style="text-align: center;" class="student_overall_view_number" scope="col">Shelving</th>
+                    <th style="text-align: center;" class="student_overall_view_number" scope="col">Holds List</th>
+                    <th style="text-align: center;" class="student_overall_view_number" scope="col">RM List</th>
                 </tr>
             </thead>
             <tbody>
                 {% for each_student in students_data %}
                 <tr class="clickable-row" id="student_overall_view_row" data-href="{{ url_for('student_view', student_id=each_student.student_id) }}">
-                    <td><a href="{{ url_for('student_view', student_id=each_student.student_id) }}">{{ each_student.student_id }}</a></td>
-                    <td><a href="{{ url_for('student_view', student_id=each_student.student_id) }}">{{ each_student.student_fname }} {{ each_student.student_lname }}</a></td>
-                    <td class="student_overall_view_number">{{ each_student.total_shelfreads }}</td>
-                    <td class="student_overall_view_number">{{ each_student.total_problem_items }}</td>
-                    <td class="student_overall_view_number">{{ each_student.total_in_house }}</td>
-                    <td class="student_overall_view_number">{{ each_student.total_shelving }}</td>
-                    <td class="student_overall_view_number">{{ each_student.total_holds_list }}</td>
-                    <td class="student_overall_view_number">{{ each_student.total_rm_list }}</td>
+                    <td style="text-align: center;"><a href="{{ url_for('student_view', student_id=each_student.student_id) }}">{{ each_student.student_id }}</a></td>
+                    <td style="text-align: center;"><a href="{{ url_for('student_view', student_id=each_student.student_id) }}">{{ each_student.student_fname }} {{ each_student.student_lname }}</a></td>
+                    <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_xp }}</td>
+                    <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_shelfreads }}</td>
+                    <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_problem_items }}</td>
+                    <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_in_house }}</td>
+                    <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_shelving }}</td>
+                    <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_holds_list }}</td>
+                    <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_rm_list }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
