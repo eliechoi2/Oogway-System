@@ -1,0 +1,91 @@
+{% extends 'supervisor-navbar-base.html' %}
+
+{% block page_title %}
+Analytics
+{% endblock %}
+
+{% block child_content %}
+<p>Analytics - Top Performers</p>
+{% endblock %}
+
+{% block page_content %}
+<!-- Include Chart.js library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="container">
+    <!-- Section for Overall Top 3 Performers -->
+    <div class="row">
+        <div class="col-3">
+            <div class="section p-3">
+                <h4><b>Overall Top 3 Performers</b></h4>
+                <div style="height: 300px; width: 300px;">
+                    <canvas id="pie-chart-overall" width="300" height="300"></canvas>
+                </div>
+                <script>
+                    var ctx = document.getElementById('pie-chart-overall').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: [{% for student in top_3_overall %}'{{ student.student_fname }} {{ student.student_lname }}',{% endfor %}],
+                            datasets: [{
+                                data: [{% for student in top_3_overall %}{{ student.total_xp }},{% endfor %}],
+                                backgroundColor: ['#FF5733', '#33FF57', '#3357FF'],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: false,  // Disable responsiveness to prevent expansion
+                            maintainAspectRatio: false // Ensure it doesn't adjust aspect ratio
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section for Task-Specific Top Performers -->
+    <div class="row">
+        <div class="col-12">
+            <h4><b>Top 3 Performers by Task</b></h4>
+            <div class="row">
+                {% for task, performers in top_3_performers_by_task.items() %}
+                <div class="col-4">
+                    <h5>{{ task.replace('total_', '').replace('_', ' ').title() }}</h5>
+                    <div style="height: 120px; width: 300px;">
+                        <canvas id="bar-chart-{{ task }}" width="300" height="120"></canvas>
+                    </div>
+                    <script>
+                        var ctx = document.getElementById('bar-chart-{{ task }}').getContext('2d');
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: [{% for student in performers %}'{{ student.student_fname }} {{ student.student_lname }}',{% endfor %}],
+                                datasets: [{
+                                    label: 'XP',
+                                    data: [{% for student in performers %}{{ student.xp_for_task }},{% endfor %}],
+                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        max: {{ max_xp_by_task[task] }}
+                                    }
+                                },
+                                responsive: false,  // Disable responsiveness to prevent expansion
+                                maintainAspectRatio: false // Ensure it doesn't adjust aspect ratio
+                            }
+                        });
+                    </script>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+{% endblock %}

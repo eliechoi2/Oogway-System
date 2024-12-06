@@ -461,3 +461,16 @@ div#stack-dropdown-button {
 #stack_search_li {
     padding: 0;
 }
+
+.progress {
+    background-color: #e0e0e0; /* Light gray for the bar background */
+    border-radius: 5px;
+    overflow: hidden;
+    height: 10px;
+}
+
+.determinate {
+    background-color: #4caf50; /* Green for the filled portion */
+    transition: width 0.6s ease; /* Smooth animation */
+    height: 100%;
+}

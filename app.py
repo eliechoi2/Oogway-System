@@ -1123,7 +1123,7 @@ def supervisor_student_overall_view():
             'total_rm_list': total_rm_list,
             'total_xp': total_xp
         })
-
+    
     # Return the data to the template
     return render_template('supervisor-student-overall-view.html', students_data=student_xp_data)
 
@@ -1183,6 +1183,84 @@ def supervisor_student_list_view():
             )
         )
     return render_template('supervisor-student-list-view.html', students=students)
+
+@app.route('/supervisor-analytics')
+def supervisor_analytics():
+    # Get all students
+    students = db.session.query(Student).all()
+    
+    # Define XP values for each task
+    XP_VALUES = {
+        'total_shelfreads': 10,
+        'total_problem_items': 5,
+        'total_in_house': 2,
+        'total_shelving': 8,
+        'total_holds_list': 3,
+        'total_rm_list': 4
+    }
+
+    # Store top performers by task
+    top_3_performers_by_task = {}
+    max_xp_by_task = {task: 1 for task in XP_VALUES}  # Initialize with 1 to avoid zero division
+    student_xp_data = []
+
+    for task in XP_VALUES:
+        # Calculate individual XP for the specific task
+        task_performers = []
+
+        for student in students:
+            student_data = db.session.query(Student_Data).filter_by(student_id=student.student_id).first()
+            if not student_data:
+                continue  # Skip if there is no associated student data
+
+            # Get task-specific value
+            task_xp = getattr(student_data, task, 0) * XP_VALUES[task]
+
+            # Track the max XP for scaling progress bars
+            max_xp_by_task[task] = max(max_xp_by_task[task], task_xp)
+
+            task_performers.append({
+                'student_id': student.student_id,
+                'student_fname': student.student_fname,
+                'student_lname': student.student_lname,
+                'xp_for_task': task_xp
+            })
+
+            # Collect data for overall XP calculation
+            student_xp_data.append({
+                'student_id': student.student_id,
+                'student_fname': student.student_fname,
+                'student_lname': student.student_lname,
+                'task': task,
+                'xp_for_task': task_xp
+            })
+
+        # Sort and get the top 3 performers for the task
+        top_3_performers_by_task[task] = sorted(task_performers, key=lambda x: x['xp_for_task'], reverse=True)[:3]
+
+    # Calculate overall top 3 performers
+    total_xp_by_student = {}
+    for data in student_xp_data:
+        total_xp_by_student[data['student_id']] = total_xp_by_student.get(data['student_id'], 0) + data['xp_for_task']
+
+    # Sort by total XP and get the top 3 performers overall
+    top_3_overall = sorted(
+        [{'student_id': student_id, 'student_fname': next(item for item in student_xp_data if item['student_id'] == student_id)['student_fname'],
+          'student_lname': next(item for item in student_xp_data if item['student_id'] == student_id)['student_lname'], 
+          'total_xp': total_xp} 
+         for student_id, total_xp in total_xp_by_student.items()],
+        key=lambda x: x['total_xp'], reverse=True
+    )[:3]
+
+    # Render the template with the task-specific performers and max XP, as well as overall top performers
+    return render_template(
+        'supervisor-analytics.html',
+        top_3_performers_by_task=top_3_performers_by_task,
+        max_xp_by_task=max_xp_by_task,
+        top_3_overall=top_3_overall
+    )
+
+
 
 
 
