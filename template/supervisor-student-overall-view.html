@@ -24,7 +24,6 @@ Students (Overall View)
                     <th style="text-align: center;" scope="col">ID</th>
                     <th style="text-align: center;" scope="col">Student</th>
                     <th style="text-align: center;" scope="col">XP</th>
-                    <th style="text-align: center;" scope="col">Scheduled Hours</th>
                     <th style="text-align: center;" class="student_overall_view_number" scope="col">Holds List</th>
                     <th style="text-align: center;" class="student_overall_view_number" scope="col">ILL Slips</th>
                     <th style="text-align: center;" class="student_overall_view_number" scope="col">Shelving</th>
@@ -39,7 +38,6 @@ Students (Overall View)
                     <td style="text-align: center;"><a href="{{ url_for('student_view', student_id=each_student.student_id) }}">{{ each_student.student_id }}</a></td>
                     <td style="text-align: center;"><a href="{{ url_for('student_view', student_id=each_student.student_id) }}">{{ each_student.student_fname }} {{ each_student.student_lname }}</a></td>
                     <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_xp }}</td>
-                    <td style="text-align: center;" class="student_overall_view_number">{{ each_student.student_hours }}</td>
                     <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_holds_list }}</td>
                     <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_ill }}</td>
                     <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_shelving }}</td>

@@ -86,6 +86,15 @@
     {% endif %}
   </div>
 
+  <div class="col-md-4">
+    {% if action and action in ['create', 'update'] %}
+    <label for="student_hours" class="form-label"><strong>Scheduled Hours</strong></label>
+    <input type="number" class="form-control" id="student_hours" name="student_hours" value="{{ student['student_hours'] if student else '' }}" required>
+    {% else %}
+        <strong>Scheduled Hours</strong>
+        <br>{{ student['student_hours'] }}
+    {% endif %}
+  </div>
   
   <div class="col-12 text-center">
     {% if action and action in ['create', 'update'] %}

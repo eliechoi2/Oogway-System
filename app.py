@@ -369,6 +369,7 @@ def student_edit(student_id):
             student.student_email = request.form['student_email']
             student.student_username = request.form['student_username']
             student.student_password = request.form['student_password']
+            student.student_hours = request.form['student_hours']  # Update scheduled hours here
 
             db.session.commit()
             flash(f'{student.student_fname} {student.student_lname} was successfully updated!', 'success')
@@ -379,6 +380,7 @@ def student_edit(student_id):
 
     flash(f'Invalid request. Please contact support if this problem persists.', 'error')
     return redirect(url_for('supervisor_student_list_view'))
+
 
 @app.route('/student/delete/<int:student_id>')
 @login_required
@@ -1062,7 +1064,6 @@ def supervisor_student_overall_view():
         Student.student_id,
         Student.student_fname,
         Student.student_lname,
-        Student.student_hours,
         db.func.sum(Student_Data.total_shelfreads).label('total_shelfreads'),
         db.func.sum(Student_Data.total_problem_items).label('total_problem_items'),
         db.func.sum(Student_Data.total_in_house).label('total_in_house'),
@@ -1106,7 +1107,6 @@ def supervisor_student_overall_view():
         total_shelving = student.total_shelving
         total_holds_list = student.total_holds_list
         total_ill = student.total_ill
-        student_hours = student.student_hours  # Include student_hours here
 
         # Calculate total XP for the student
         total_xp = (
@@ -1123,7 +1123,6 @@ def supervisor_student_overall_view():
             'student_id': student.student_id,
             'student_fname': student.student_fname,
             'student_lname': student.student_lname,
-            'student_hours': student_hours,  # Add student_hours to the dictionary
             'total_shelfreads': total_shelfreads,
             'total_problem_items': total_problem_items,
             'total_in_house': total_in_house,

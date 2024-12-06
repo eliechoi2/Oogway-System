@@ -47,6 +47,7 @@ Students (List View)
                       <th scope="col">Email</th>
                       <th scope="col">Username</th>
                       <th scope="col">Password</th>
+                      <th scope="col">Scheduled Hours</th>
                       {% if current_user.role in ['ADMIN', 'supervisor'] %}
                       <th>Actions</th>
                       {% endif %}
@@ -61,6 +62,7 @@ Students (List View)
                         <td class="student_overall_view_number">{{ each_student['student_email'] }}</td>
                         <td class="student_overall_view_number">{{ each_student['student_username'] }}</td>
                         <td class="student_overall_view_number">{{ each_student['student_password'] }}</td>
+                        <td class="student_overall_view_number">{{ each_student['student_hours'] }}</td>
                         {% if current_user.role in ['supervisor'] %}
                         <td>
                             <a href="{{ url_for('student_edit', student_id=each_student['student_id']) }}" class="btn btn-secondary" role="button">Edit</a>
