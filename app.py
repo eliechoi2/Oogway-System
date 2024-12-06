@@ -1,4 +1,4 @@
-from models import db, Student, Admin, Tasks, Floor, Collections, Student_Data, ShelfReading, Problem, ProblemList, Shelving, InHouse, HoldList, RmList 
+from models import db, Student, Admin, Tasks, Floor, Collections, Student_Data, ShelfReading, Problem, ProblemList, Shelving, InHouse, HoldList, RmList, ILLList
 import os
 from flask import Flask, jsonify, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -139,36 +139,43 @@ def admin_dashboard():
 
 
 def visualization():
-    # Get the date one week ago
-    today = datetime.today().date()
-    one_week_ago = today - timedelta(days=7)
+    try:
+        # Database query logic
+        today = datetime.today().date()
+        one_week_ago = today - timedelta(days=7)
 
-    # Query the ShelfReading table for records within the last week
-    records = (
-        db.session.query(ShelfReading.date, func.sum(ShelfReading.shelfreads_completed))
-        .filter(ShelfReading.date >= one_week_ago, ShelfReading.date <= today)
-        .group_by(ShelfReading.date)
-        .order_by(ShelfReading.date)
-        .all()
-    )
-    
-    all_dates = [one_week_ago + timedelta(days=i) for i in range(7)]
-    date_labels = [date.strftime('%Y-%m-%d') for date in all_dates]
-    shelfreads_data = [0] * 7
-    
-    for record in records:
-        date_str = record[0].strftime('%Y-%m-%d')
-        if date_str in date_labels:
-            shelfreads_data[date_labels.index(date_str)] = record[1]
+        # Query to sum total holds for each day within the past week
+        records = (
+            db.session.query(HoldList.date, func.sum(HoldList.total_holds))
+            .filter(HoldList.date.between(one_week_ago, today))
+            .group_by(HoldList.date)
+            .order_by(HoldList.date)
+            .all()
+        )
 
-    # Format data for Chart.js
-    data = {
-        'dates': date_labels,
-        'shelfreads_completed': shelfreads_data,
-    }
-    
-    return data
+        # Generate the list of dates from today to one week ago
+        all_dates = [today - timedelta(days=i) for i in range(8)]
+        all_dates.reverse()  # Ensure the order is from past to present
+        date_labels = [date.strftime('%Y-%m-%d') for date in all_dates]
 
+        # Initialize holdlist data for each day with 0
+        holdlist_data = [0] * 8
+
+        # Populate the holdlist data with queried totals
+        for record in records:
+            date_str = record[0].strftime('%Y-%m-%d')
+            if date_str in date_labels:
+                holdlist_data[date_labels.index(date_str)] = record[1]
+
+        # Return data as a dictionary
+        return {
+            'dates': date_labels,
+            'total_holds': holdlist_data,
+        }
+    
+    except Exception as e:
+        print(f"Error in visualization: {e}")
+        return {'dates': [], 'total_holds': []} 
     
 
 @app.route('/supervisor-dashboard')
@@ -177,6 +184,7 @@ def visualization():
 def supervisor_dashboard():
     today = date.today()
 
+    # Query for total tasks completed for today
     total_shelfreads = db.session.query(db.func.sum(ShelfReading.shelfreads_completed)) \
         .filter(ShelfReading.date == today).scalar() or 0
 
@@ -192,19 +200,30 @@ def supervisor_dashboard():
     total_holds = db.session.query(db.func.sum(HoldList.total_holds)) \
         .filter(HoldList.date == today).scalar() or 0
 
-    total_rm = db.session.query(db.func.sum(RmList.total_rm)) \
-        .filter(RmList.date == today).scalar() or 0
-        
-    shelfreads_data = visualization()
-    
+    total_ill = db.session.query(db.func.sum(ILLList.total_ill)) \
+        .filter(ILLList.date == today).scalar() or 0
+
+    total_tasks = {
+        'Shelf Reads': total_shelfreads,
+        'Problems': total_problems,
+        'In House': total_in_house,
+        'Shelving': total_shelving,
+        'Holds': total_holds,
+        'ILL': total_ill
+    }
+
+    # Hold list data for the line chart (from visualization function)
+    holdlist_data = visualization()
+
     return render_template('supervisor-dashboard.html',
                            total_shelfreads=total_shelfreads,
                            total_problems=total_problems,
                            total_in_house=total_in_house,
                            total_shelving=total_shelving,
                            total_holds=total_holds,
-                           total_rm=total_rm,
-                           shelfreads_data=shelfreads_data)
+                           total_ill=total_ill,
+                           total_tasks=total_tasks,
+                           holdlist_data=holdlist_data)
 
 
 
@@ -444,7 +463,6 @@ def supervisor_input_data():
 
 from datetime import datetime
 
-#shelfreading
 @app.route('/supervisor-input-data/1', methods=['GET', 'POST'])
 @login_required
 @role_required(['supervisor'])
@@ -465,7 +483,8 @@ def supervisor_input_data_1():
         collection_id = request.form.get('collection_id')
         duration = (end_time - start_time).total_seconds() / 3600.0
         
-        # Create a new Shelving record
+        student = Student.query.filter_by(student_id=student_id).first()
+        
         new_shelfread = ShelfReading(
             date=date,
             start_time=start_time,
@@ -482,7 +501,7 @@ def supervisor_input_data_1():
         # Add and commit to the database
         db.session.add(new_shelfread)
         db.session.commit()
-        flash(f'Shelfreads record for student {student_id} added successfully!', 'success')
+        flash(f'Shelfreads record for student {student.student_fname} added successfully!', 'success')
         return redirect(url_for('supervisor_input_data'))  # Replace 'some_view_name' with the appropriate route
 
     # GET request, load student and floor data
@@ -513,7 +532,8 @@ def supervisor_input_data_2():
         problem_id = request.form.get('problem_id')
         total_problems = 1
         
-        # Check if call_no is provided
+        student = Student.query.filter_by(student_id=student_id).first()
+        
         if not call_no:
             flash('Call number is required!', 'danger')
             return redirect(request.url)  # Redirect back to the form with error
@@ -530,7 +550,7 @@ def supervisor_input_data_2():
         # Add and commit to the database
         db.session.add(problem)
         db.session.commit()
-        flash(f'Problem item record for student {student_id} added successfully!', 'success')
+        flash(f'Problem item record for student {student.student_fname} added successfully!', 'success')
         return redirect(url_for('supervisor_input_data'))  # Replace with appropriate route
 
     # GET request, load student and floor data
@@ -552,7 +572,8 @@ def supervisor_input_data_3():
         date = datetime.strptime(date_string, '%Y-%m-%d').date()
         total_in_house = request.form.get('total_in_house')
    
-        # Create a new Problem record
+        student = Student.query.filter_by(student_id=student_id).first()
+        
         in_house = InHouse(
             student_id=student_id,
             date=date,
@@ -562,7 +583,7 @@ def supervisor_input_data_3():
         # Add and commit to the database
         db.session.add(in_house)
         db.session.commit()
-        flash(f'In-House item record for student {student_id} added successfully!', 'success')
+        flash(f'In-House item record for student {student.student_fname} added successfully!', 'success')
         return redirect(url_for('supervisor_input_data'))  # Replace with appropriate route
 
     # GET request, load student and floor data
@@ -585,7 +606,8 @@ def supervisor_input_data_4():
         date = datetime.strptime(date_string, '%Y-%m-%d').date()
         total_shelving = request.form.get('total_shelving')
         
-        # Create a new Shelving record
+        student = Student.query.filter_by(student_id=student_id).first()
+ 
         new_shelving = Shelving(
             date=date,
             student_id=student_id,
@@ -595,7 +617,7 @@ def supervisor_input_data_4():
         # Add and commit to the database
         db.session.add(new_shelving)
         db.session.commit()
-        flash(f'Shelving record for student {student_id} added successfully!', 'success')
+        flash(f'Shelving record for student {student.student_fname} added successfully!', 'success')
         return redirect(url_for('supervisor_input_data'))  # Replace 'some_view_name' with the appropriate route
 
     # GET request, load student and floor data
@@ -615,6 +637,8 @@ def supervisor_input_data_5():
         date = datetime.strptime(date_string, '%Y-%m-%d').date()
         total_holds = request.form.get('total_holds')
         
+        student = Student.query.filter_by(student_id=student_id).first()
+        
         new_holds = HoldList(
             date=date,
             student_id=student_id,
@@ -622,7 +646,7 @@ def supervisor_input_data_5():
         )
         db.session.add(new_holds)
         db.session.commit()
-        flash(f'Hold List record for student {student_id} added successfully!', 'success')
+        flash(f'Hold List record for student {student.student_fname} added successfully!', 'success')
         return redirect(url_for('supervisor_input_data')) 
 
     students = Student.query.all()
@@ -642,7 +666,8 @@ def supervisor_input_data_6():
         date = datetime.strptime(date_string, '%Y-%m-%d').date()
         total_rm = request.form.get('total_rm')
         
-        # Create a new Shelving record
+        student = Student.query.filter_by(student_id=student_id).first()
+        
         new_rm = RmList(
             date=date,
             student_id=student_id,
@@ -652,7 +677,7 @@ def supervisor_input_data_6():
         # Add and commit to the database
         db.session.add(new_rm)
         db.session.commit()
-        flash(f'Hold List record for student {student_id} added successfully!', 'success')
+        flash(f'Hold List record for student {student.student_fname} added successfully!', 'success')
         return redirect(url_for('supervisor_input_data'))  # Replace 'some_view_name' with the appropriate route
 
     # GET request, load student and floor data
@@ -804,10 +829,10 @@ def upload_file():
             # Process the file
             process_excel_file(filename)
             
-            flash('File successfully uploaded and processed')
-            return redirect(url_for('upload_file'))  # Redirect to another page
+            flash(f'File was successfully added!', 'success')
+            return redirect(url_for('upload_file'))  
 
-    return render_template('supervisor-input-data.html')  # Assuming you have an 'upload.html' template
+    return render_template('supervisor-input-data.html')  
 
 
 def process_excel_file(excel_file_path):
@@ -1074,6 +1099,7 @@ def supervisor_student_list_view():
             )
         )
     return render_template('supervisor-student-list-view.html', students=students)
+
 
 
 

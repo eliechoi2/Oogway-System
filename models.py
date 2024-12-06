@@ -277,7 +277,7 @@ class Shelving(db.Model):
 
 
 # table for ILL
-class ILL(db.Model):
+class ILLList(db.Model):
     __tablename__ = 'ILL'
     date = db.Column(db.DATE, primary_key=True, nullable=False)
     total_ill = db.Column(db.Integer, nullable=False)

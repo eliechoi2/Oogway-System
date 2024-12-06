@@ -20,18 +20,13 @@ Administrator Dashboard
                 <div class="row">
                     <div class="col section me-2 pt-2 ms-2">
                         <img src="" alt="">
-                        <h4 class="topic"><b>{{ total_shelfreads }}</b></h4>
-                        <p class="subtitle">Total ShelfReads</p>
+                        <h4 class="topic"><b>{{ total_holds }}</b></h4>
+                        <p class="subtitle">Total Holds List</p>
                     </div>
                     <div class="col section me-2 pt-2 ms-2">
                         <img src="" alt="">
-                        <h4 class="topic"><b>{{ total_problems }}</b></h4>
-                        <p class="subtitle">Total Problem Items</p>
-                    </div>
-                    <div class="col section me-2 pt-2 ms-2">
-                        <img src="" alt="">
-                        <h4 class="topic"><b>{{ total_in_house }}</b></h4>
-                        <p class="subtitle">Total In-House</p>
+                        <h4 class="topic"><b>{{ total_ill }}</b></h4>
+                        <p class="subtitle">ILL Slips</p>
                     </div>
                     <div class="col section me-2 pt-2 ms-2">
                         <img src="" alt="">
@@ -40,74 +35,74 @@ Administrator Dashboard
                     </div>
                     <div class="col section me-2 pt-2 ms-2">
                         <img src="" alt="">
-                        <h4 class="topic"><b>{{ total_holds }}</b></h4>
-                        <p class="subtitle">Total Holds List</p>
+                        <h4 class="topic"><b>{{ total_in_house }}</b></h4>
+                        <p class="subtitle">Total In-House</p>
                     </div>
                     <div class="col section me-2 pt-2 ms-2">
                         <img src="" alt="">
+                        <h4 class="topic"><b>{{ total_problems }}</b></h4>
+                        <p class="subtitle">Total Problem Items</p>
+                    </div>
+                    <div class="col section me-2 pt-2 ms-2">
+                        <img src="" alt="">
+                        <h4 class="topic"><b>{{ total_shelfreads }}</b></h4>
+                        <p class="subtitle">Total ShelfReads</p>
+                    </div>
+                    <!-- <div class="col section me-2 pt-2 ms-2">
+                        <img src="" alt="">
                         <h4 class="topic"><b>{{ total_rm }}</b></h4>
                         <p class="subtitle">Total RM List</p>
-                    </div>
+                    </div> -->
                 </div>
             </div>
-            <div class="section pt-3"> 
-                <h3>Shelfreads</h3>
-                <canvas id="shelfreadsChart"></canvas>
+            <div class="section pt-3">
+                <h3>Weekly Holds List</h3>
+                <canvas id="holdlistChart"></canvas>
                 <script>
-                    // Data from Flask passed into the template
-                    const shelfreadsData = {{ shelfreads_data | tojson }};
-                    
-                    // Function to get the day name from a date (e.g., Sun, Mon, Tue, etc.)
+                    const holdlistData = {{ holdlist_data | tojson }};
                     function getDayName(dateString) {
                         const date = new Date(dateString);
                         const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                        return daysOfWeek[date.getDay()];
+                        return daysOfWeek[date.getUTCDay()]; 
                     }
-                
-                    // Get the chart context
-                    const ctx = document.getElementById('shelfreadsChart').getContext('2d');
-                
-                    // Create a gradient color for the background (top to bottom)
+            
+                    const ctx = document.getElementById('holdlistChart').getContext('2d');
+ 
                     const gradientBackground = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
-                    gradientBackground.addColorStop(0, 'rgba(0, 255, 209, 0.6)'); // Lighter color at the top
-                    gradientBackground.addColorStop(0.7, 'rgba(187, 0, 203, 0.5)'); // Darker color at the bottom
+                    gradientBackground.addColorStop(0, 'rgba(0, 255, 209, 0.6)');
+                    gradientBackground.addColorStop(0.7, 'rgba(187, 0, 203, 0.5)');
                     gradientBackground.addColorStop(1, 'rgba(255, 255, 255, 0.2)');
-                
-                    // Convert the date labels to day names (Sun, Mon, Tue, etc.)
-                    const dayNames = shelfreadsData.dates.map(getDayName);
-                
-                    // Chart.js setup
+            
+                    const dayNames = holdlistData.dates.map(getDayName);
+            
                     new Chart(ctx, {
-                        type: 'line', // Line chart
+                        type: 'line',
                         data: {
-                            labels: dayNames, // Use the day names as labels
+                            labels: dayNames, 
                             datasets: [{
-                                data: shelfreadsData.shelfreads_completed,
+                                label: 'Total Holds',
+                                data: holdlistData.total_holds,
                                 borderColor: 'rgba(75, 192, 192, 1)',
-                                backgroundColor: gradientBackground, // Use the gradient as the background
-                                fill: true,  // Fill the area under the curve
-                                tension: 0.4, // Smooth line effect
-                                pointRadius: 2, // Remove points on the line
+                                backgroundColor: gradientBackground, 
+                                fill: true, 
+                                tension: 0.4, 
+                                pointRadius: 2, 
                             }]
                         },
                         options: {
                             responsive: true,
                             plugins: {
                                 legend: {
-                                    display: false // Hides the legend
+                                    display: false
                                 },
                                 tooltip: {
-                                    enabled: true, // Enable tooltips
-                                    mode: 'nearest', // Ensures it shows on the closest point
                                     callbacks: {
-                                        title: function(tooltipItem) {
-                                            // Display the date for the point hovered
+                                        title: (tooltipItem) => {
                                             const dateIndex = tooltipItem[0].dataIndex;
-                                            return shelfreadsData.dates[dateIndex]; 
+                                            return holdlistData.dates[dateIndex];
                                         },
-                                        label: function(tooltipItem) {
-                                            // Display the number of shelf reads completed
-                                            return 'Shelf Reads: ' + tooltipItem.raw;
+                                        label: (tooltipItem) => {
+                                            return `Hold List: ${tooltipItem.raw}`;
                                         }
                                     }
                                 }
@@ -118,7 +113,7 @@ Administrator Dashboard
                                         display: true,
                                     },
                                     grid: {
-                                        display: false // Remove vertical grid lines
+                                        display: false
                                     }
                                 },
                                 y: {
@@ -126,61 +121,67 @@ Administrator Dashboard
                                         display: false,
                                     },
                                     grid: {
-                                        borderColor: 'rgba(0,0,0,0)', // Remove border for the horizontal lines
-                                        color: 'rgba(0, 0, 0, 0.1)', // Light grid line color
-                                        lineWidth: 1, // Line width for grid lines
-                                        drawBorder: false, // Don't draw the border of the y-axis
-                                        borderDash: [5, 5], // Make the horizontal lines dashed
+                                        borderColor: 'rgba(0,0,0,0)',
+                                        color: 'rgba(0, 0, 0, 0.1)',
+                                        lineWidth: 1, 
+                                        drawBorder: false,
+                                        borderDash: [5, 5],
                                     }
                                 }
                             },
                             layout: {
                                 padding: {
-                                    top: 20, // Add padding to ensure proper space from the top
-                                    bottom: 20, // Add padding to ensure proper space at the bottom
+                                    top: 20,
+                                    bottom: 20, 
                                 }
                             }
                         }
                     });
                 </script>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="section">
+                <h2>Total Tasks for Today</h2>
+                <canvas id="tasksPieChart" width="400" height="400"></canvas>
                 
-                
-                
-                          
-                
+                <script>
+                    var taskData = {{ total_tasks | tojson }};
+                    
+                    var ctx = document.getElementById('tasksPieChart').getContext('2d');
+                    var tasksPieChart = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: Object.keys(taskData), 
+                            datasets: [{
+                                label: 'Total Tasks for Today',
+                                data: Object.values(taskData), 
+                                backgroundColor: ['#FF5733', '#33FF57', '#3357FF', '#FF33A8', '#FFD133', '#33C1FF'],
+                                hoverOffset: 4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(tooltipItem) {
+                                            return tooltipItem.label + ': ' + tooltipItem
+                                            label: function(tooltipItem) {
+                                                return tooltipItem.label + ': ' + tooltipItem.raw + ' tasks';
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    </script>
+                </div>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-8 section pt-3">
-            <h4 class="topic"><b>Top Performers</b></h4>
-            <div class="row pt-3 ps-3">
-                <table class="table" id="dashboard_top_performers">
-                    <thead>
-                      <tr>
-                        <th scope="col">Rank</th>
-                        <th scope="col">Name</th>
-                        <th scope="col" class="td_bar">Progress Until Next Level</th>
-                        <th scope="col" class="level">Level</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for performer in top_performers %}
-                      <tr>
-                        <th scope="row" class="rank-table">{{ loop.index }}</th>
-                        <td class="student-name">{{ performer[0] }} {{ performer[1] }}</td>
-                        <td><img class="progress_bar" src="static/images/Screenshot 2024-05-18 023550.png" alt=""></td>
-                        <td class="level">{{ performer[2] }}</td>
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
-            </div>
-        </div>
-        <div class="col-3 section pt-3 ps-3">
-            <h4 class="topic"><b>Total Completed</b></h4>
-            <p class="subtitle">Total Activity Today</p>
-        </div>
-    </div>
-</div>
 {% endblock %}

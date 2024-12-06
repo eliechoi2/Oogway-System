@@ -65,7 +65,6 @@ with app.app_context():
     db.session.commit()
     
     collections = [
-        #1st Floor
         {'collection_id': '1', 'collection': 'Folio', 'floor_id': 1},
         {'collection_id': '2', 'collection': 'A Stacks', 'floor_id': 1},
         {'collection_id': '3', 'collection': 'B-BH Stacks', 'floor_id': 1},
@@ -81,10 +80,8 @@ with app.app_context():
         {'collection_id': '13', 'collection': 'East Asia, Japan', 'floor_id': 1},
         {'collection_id': '14', 'collection': 'East Asia, Korea', 'floor_id': 1},
         
-        #5th Floor
         {'collection_id': '15', 'collection': 'G-HN', 'floor_id': 3},
-         
-        #6th Floor
+
         {'collection_id': '16', 'collection': 'Folio', 'floor_id': 4},
         {'collection_id': '17', 'collection': 'HQ-HT Stacks', 'floor_id': 4},
         {'collection_id': '18', 'collection': 'HV-HX Stacks', 'floor_id': 4},
@@ -96,8 +93,7 @@ with app.app_context():
         {'collection_id': '24', 'collection': 'PA-PF Stacks', 'floor_id': 4},
         {'collection_id': '25', 'collection': 'PG-PM Stacks', 'floor_id': 4},
         {'collection_id': '26', 'collection': 'PN-PQ Stacks', 'floor_id': 4},
-        
-        #7th Floor
+ 
         {'collection_id': '27', 'collection': 'Folio', 'floor_id': 5},
         {'collection_id': '28', 'collection': 'PN Stacks', 'floor_id': 5},
         {'collection_id': '29', 'collection': 'PQ Stacks', 'floor_id': 5},
@@ -109,8 +105,7 @@ with app.app_context():
         {'collection_id': '35', 'collection': 'R Stacks', 'floor_id': 5},
         {'collection_id': '36', 'collection': 'S-Y Stacks', 'floor_id': 5},
         {'collection_id': '37', 'collection': 'Z Stacks', 'floor_id': 5},
-        
-        #Others
+
         {'collection_id': '38', 'collection': 'Reference', 'floor_id': 6},
         {'collection_id': '39', 'collection': 'Media', 'floor_id': 6},
         {'collection_id': '40', 'collection': 'various places PQ 6000', 'floor_id': 6},
@@ -167,7 +162,6 @@ with app.app_context():
     
     for each_student in students:
         print(f'{each_student["student_fname"]} inserted into students')
-        # Create a Student object
         a_student = Student(
             student_id=each_student["student_id"],
             student_fname=each_student["student_fname"],
@@ -178,124 +172,4 @@ with app.app_context():
         )
         
         db.session.add(a_student)
-
-        # Commit the transaction
     db.session.commit()
-    
-
-
-    # creating test variables for the student table
-    # student = [
-    #     {'student_id' : '1', 'student_fname' : 'Dayri', 'student_lname' : 'Almonte', 
-    #      'student_email' : 'email@gmail.com', 'student_phone_num' : 'phone number', 
-    #      'student_username' : 'dayrialmonte', 'student_password' : bcrypt.hashpw(password, bcrypt.gensalt()), 'current_xp': 0,
-    #      'needed_xp' : 0, 'student_lvl' : 0}
-       
-    # ]
-
-    # for i in student:
-    #     print(i[0], 'inserted into table')
-    #     in_student = Student(
-    #         student_id = i[0],
-    #         student_fname = i[1],
-    #         student_lname = i[2],
-    #         student_email = i[3],
-    #         student_phone = i[4],
-    #         student_password = i[5],
-    #         xp_current = i[6],
-    #         xp_needed = i[7],
-    #         student_lvl = i[8]
-    #     )
-    #     db.session.add(in_student)
-    #     db.session.commit()
-    
-
-    # test variables for supervisor table
-
-    # supervisor = [1,'Man', 'Ager', 'supervisor@gmail.com', '2934935483', 'man_password']
-    # supervisor = [
-    #     {'supervisor_id': '1', 'supervisor_fname': 'Amy', 'supervisor_lname':'Kim', 'major_id':3,
-    #         'supervisor_email': 'ahkim@umd.edu', 'supervisor_phone': '222-222-2222', 'supervisor_password': 'amykim'}
-    # ]
-
-
-    # print(supervisor[0], 'inserted into table')
-    # in_supervisor = supervisor(
-    #     supervisor_id=supervisor[0],
-    #     supervisor_fname=supervisor[1],
-    #     supervisor_lname=supervisor[2],
-    #     supervisor_email=supervisor[3],
-    #     supervisor_phone=supervisor[4],
-    #     supervisor_password=supervisor[5],
-    # )
-    
-    # for each_supervisor in supervisor:
-    #     print(f'{each_supervisor["supervisor_fname"]} {each_supervisor["supervisor_lname"]} inserted into supervisor')
-    #     a_supervisor = supervisor(supervisor_id=each_supervisor["supervisor_id"],supervisor_fname=each_supervisor["supervisor_fname"],
-    #                         supervisor_lname=each_supervisor["supervisor_lname"], supervisor_email=each_supervisor["supervisor_email"],
-    #                         supervisor_phone=each_supervisor["supervisor_phone"], supervisor_password=each_supervisor["supervisor_password"])
-    #     db.session.add(a_supervisor)
-    #     db.session.commit()
-
-    # in_supervisor = supervisor(supervisor)
-    # db.session.add(in_supervisor)
-    # db.session.commit()
-
-
-    # test variables for levels table ( will likely translate to final)
-
-    # levels = [
-    #     [1, 100, 'Bronze I'],
-    #     [2, 150, 'Bronze II'],
-    #     [3, 200, 'Bronze III']
-    # ]
-
-    # for i in levels:
-    #     print(i[2], 'inserted into table')
-    #     in_levels = Levels(
-    #         level = i[0],
-    #         xp_total_needed = i[1],
-    #         level_id = i[2]
-    #     )
-
-    #     db.session.add(in_levels)
-    #     db.session.commit()
-
-    # # test variables for collection table
-    # collections = [
-    #     ['st_PR', 'Stack', 'PR'],
-    #     ['st_PS', 'Stack', 'PS']
-    # ]
-
-    # for i in collections:
-    #     in_collection = Collection(i)
-
-    #     db.session.add(in_collection)
-    #     db.session.commit()
-
-    # def test_var(table, test_values):
-    #     '''for inputting test variables'''
-    #     for i in test_values:
-    #         in_table = table(i)
-    #         db.session.add(in_table)
-    #         db.session.commit()
-
-    # # creating test variables for floor table
-    # floors = ['01', '02', '03', '04', '05', '06', '07']
-    # in_floor = Floor(floors)
-    # db.session.add(in_floor)
-    # db.session.commit()
-
-    # # creating test variables for location table
-    # location = [
-    #     ['7stPR', 'st_PR', '07'],
-    #     ['7stPS', 'st_PS', '07']
-    # ]
-    # test_var(Location, location)
-
-    # # creating test variables for in house table
-    # in_house = [
-    #     ['2024-01-01', '11:00:00', '13:00:00', 10, '1234567890', '7stPR'],
-    #     ['2024-01-02', '5:00:00', '7:00:00', 5, '1239997890', '7stPS']
-    # ]
-    # test_var(InHouse, in_house)
