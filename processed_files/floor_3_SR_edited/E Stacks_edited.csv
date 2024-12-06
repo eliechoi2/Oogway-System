@@ -1,0 +1,3 @@
+student_id,date,Start DateTime,End DateTime,shelfreads_completed,start_call,end_call,Duration
+18.0,2022-03-01,2022-03-01 12:12:00,2022-03-01 12:55:00,40.0,E169.12.F35,E175.9.Z8 vol.2,0.72
+16.0,2022-05-06,2022-05-06 17:03:00,2022-05-06 18:00:00,29.0,E 179.5.V45 2012,E183.8.C5B58 1968,0.95

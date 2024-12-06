@@ -1,0 +1,2 @@
+student_id,date,Start DateTime,End DateTime,shelfreads_completed,start_call,end_call,Duration
+1.0,2023-09-21,2023-09-21 09:50:00,2023-09-21 10:00:00,2.0,PL 981.7.H3496 1996 vol 10,PL990.28.M9I4 1989 vol 9,0.17
