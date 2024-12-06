@@ -24,12 +24,13 @@ Students (Overall View)
                     <th style="text-align: center;" scope="col">ID</th>
                     <th style="text-align: center;" scope="col">Student</th>
                     <th style="text-align: center;" scope="col">XP</th>
-                    <th style="text-align: center;" class="student_overall_view_number" scope="col">Shelfreads</th>
-                    <th style="text-align: center;" class="student_overall_view_number" scope="col">Problem Items</th>
-                    <th style="text-align: center;" class="student_overall_view_number" scope="col">In-House</th>
-                    <th style="text-align: center;" class="student_overall_view_number" scope="col">Shelving</th>
+                    <th style="text-align: center;" scope="col">Scheduled Hours</th>
                     <th style="text-align: center;" class="student_overall_view_number" scope="col">Holds List</th>
-                    <th style="text-align: center;" class="student_overall_view_number" scope="col">RM List</th>
+                    <th style="text-align: center;" class="student_overall_view_number" scope="col">ILL Slips</th>
+                    <th style="text-align: center;" class="student_overall_view_number" scope="col">Shelving</th>
+                    <th style="text-align: center;" class="student_overall_view_number" scope="col">In-House</th>
+                    <th style="text-align: center;" class="student_overall_view_number" scope="col">Problem Items</th>
+                    <th style="text-align: center;" class="student_overall_view_number" scope="col">Shelfreads</th>
                 </tr>
             </thead>
             <tbody>
@@ -38,12 +39,13 @@ Students (Overall View)
                     <td style="text-align: center;"><a href="{{ url_for('student_view', student_id=each_student.student_id) }}">{{ each_student.student_id }}</a></td>
                     <td style="text-align: center;"><a href="{{ url_for('student_view', student_id=each_student.student_id) }}">{{ each_student.student_fname }} {{ each_student.student_lname }}</a></td>
                     <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_xp }}</td>
-                    <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_shelfreads }}</td>
-                    <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_problem_items }}</td>
-                    <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_in_house }}</td>
-                    <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_shelving }}</td>
+                    <td style="text-align: center;" class="student_overall_view_number">{{ each_student.student_hours }}</td>
                     <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_holds_list }}</td>
-                    <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_rm_list }}</td>
+                    <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_ill }}</td>
+                    <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_shelving }}</td>
+                    <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_in_house }}</td>
+                    <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_problem_items }}</td>
+                    <td style="text-align: center;" class="student_overall_view_number">{{ each_student.total_shelfreads }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

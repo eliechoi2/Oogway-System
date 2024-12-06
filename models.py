@@ -58,11 +58,11 @@ class Student(db.Model):
     student_email = db.Column(db.VARCHAR(100), nullable=False, unique=True)
     student_username = db.Column(db.VARCHAR(100), nullable=False, unique=True)
     student_password = db.Column(db.VARCHAR(30), nullable=False)
+    student_hours = db.Column(db.Integer, nullable=False)
     
     def __repr__(self):
         return f'User ID: {self.student_id}, Name: {self.student_fname} {self.student_lname}'
 
-    # You can still keep the get_id method for custom behavior if needed
     def get_id(self):
         return self.student_id
 
@@ -78,9 +78,9 @@ class Student_Data(db.Model):
     total_in_house = db.Column(db.Integer, nullable=False)
     total_shelving = db.Column(db.Integer, nullable=False)
     total_holds_list = db.Column(db.Integer, nullable=False)
-    total_rm_list = db.Column(db.Integer, nullable=False)
+    total_ill = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, student_id, task_id, total_shelfreads, total_problem_items, total_in_house, total_shelving, total_holds_list, total_rm_list):
+    def __init__(self, student_id, task_id, total_shelfreads, total_problem_items, total_in_house, total_shelving, total_holds_list, total_ill):
         self.student_id = student_id
         self.task_id = task_id
         self.total_shelfreads = total_shelfreads
@@ -88,7 +88,7 @@ class Student_Data(db.Model):
         self.total_in_house = total_in_house
         self.total_shelving = total_shelving
         self.total_holds_list = total_holds_list
-        self.total_rm_list = total_rm_list
+        self.total_ill = total_ill
 
     def __repr__(self):
         return f'Student_Data ID: {self.data_id}, Student ID: {self.student_id}, Task ID: {self.task_id}'

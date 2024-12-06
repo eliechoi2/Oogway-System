@@ -801,18 +801,20 @@ def student_home():
     return render_template('student-home.html', tasks=tasks)
 
 
-# Define file upload path
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['ALLOWED_EXTENSIONS'] = {'xls', 'xlsx'}
 
-# Helper function to check allowed file extensions
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 # Route to upload the file
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
+    # Check if the 'uploads' directory exists, if not, create it
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        os.makedirs(app.config['UPLOAD_FOLDER'])
+
     if request.method == 'POST':
         if 'file' not in request.files:
             flash('No file part')
@@ -825,14 +827,15 @@ def upload_file():
             # Save the file to the server
             filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
             file.save(filename)
-            
+
             # Process the file
             process_excel_file(filename)
-            
-            flash(f'File was successfully added!', 'success')
-            return redirect(url_for('upload_file'))  
 
-    return render_template('supervisor-input-data.html')  
+            flash(f'File was successfully added!', 'success')
+            return redirect(url_for('upload_file'))
+
+    return render_template('supervisor-input-data.html')
+
 
 
 def process_excel_file(excel_file_path):
@@ -1016,14 +1019,14 @@ def update_student_data(student_id):
         total_in_house = 0
         total_shelving = 0
         total_holds_list = 0
-        total_rm_list = 0
+        total_ill = 0
     else:
         total_shelfreads = db.session.query(func.count(ShelfReading.student_id)).filter(ShelfReading.student_id == student_id).scalar()
         total_problem_items = db.session.query(func.count(Problem.student_id)).filter(Problem.student_id == student_id).scalar()
         total_in_house = db.session.query(func.count(InHouse.student_id)).filter(InHouse.student_id == student_id).scalar()
         total_shelving = db.session.query(func.count(Shelving.student_id)).filter(Shelving.student_id == student_id).scalar()
         total_holds_list = db.session.query(func.count(HoldList.student_id)).filter(HoldList.student_id == student_id).scalar()
-        total_rm_list = db.session.query(func.count(RmList.student_id)).filter(RmList.student_id == student_id).scalar()
+        total_ill = db.session.query(func.count(ILLList.student_id)).filter(ILLList.student_id == student_id).scalar()
 
     task_id = 1  # Update with the correct task ID if needed
     
@@ -1035,7 +1038,7 @@ def update_student_data(student_id):
         total_in_house=total_in_house,
         total_shelving=total_shelving,
         total_holds_list=total_holds_list,
-        total_rm_list=total_rm_list
+        total_ill=total_ill
     )
 
     db.session.add(student_data)
@@ -1059,12 +1062,13 @@ def supervisor_student_overall_view():
         Student.student_id,
         Student.student_fname,
         Student.student_lname,
-        Student_Data.total_shelfreads,
-        Student_Data.total_problem_items,
-        Student_Data.total_in_house,
-        Student_Data.total_shelving,
-        Student_Data.total_holds_list,
-        Student_Data.total_rm_list
+        Student.student_hours,
+        db.func.sum(Student_Data.total_shelfreads).label('total_shelfreads'),
+        db.func.sum(Student_Data.total_problem_items).label('total_problem_items'),
+        db.func.sum(Student_Data.total_in_house).label('total_in_house'),
+        db.func.sum(Student_Data.total_shelving).label('total_shelving'),
+        db.func.sum(Student_Data.total_holds_list).label('total_holds_list'),
+        db.func.sum(Student_Data.total_ill).label('total_ill')
     ).join(Student_Data, Student.student_id == Student_Data.student_id)
 
     if search_query:
@@ -1076,8 +1080,11 @@ def supervisor_student_overall_view():
             )
         )
 
-    # Make sure the results are distinct and ordered by student_id
-    students_data = query.distinct().order_by(Student.student_id).all()
+    # Group by student_id to ensure each student appears only once
+    query = query.group_by(Student.student_id, Student.student_fname, Student.student_lname, Student.student_hours)
+
+    # Order by student_id
+    students_data = query.order_by(Student.student_id).all()
 
     # Define XP values for each task
     XP_VALUES = {
@@ -1086,7 +1093,7 @@ def supervisor_student_overall_view():
         'total_in_house': 2,
         'total_shelving': 8,
         'total_holds_list': 3,
-        'total_rm_list': 4
+        'total_ill': 4
     }
 
     # Calculate total XP for each student and keep the original data
@@ -1098,7 +1105,8 @@ def supervisor_student_overall_view():
         total_in_house = student.total_in_house
         total_shelving = student.total_shelving
         total_holds_list = student.total_holds_list
-        total_rm_list = student.total_rm_list
+        total_ill = student.total_ill
+        student_hours = student.student_hours  # Include student_hours here
 
         # Calculate total XP for the student
         total_xp = (
@@ -1107,25 +1115,29 @@ def supervisor_student_overall_view():
             total_in_house * XP_VALUES['total_in_house'] +
             total_shelving * XP_VALUES['total_shelving'] +
             total_holds_list * XP_VALUES['total_holds_list'] +
-            total_rm_list * XP_VALUES['total_rm_list']
+            total_ill * XP_VALUES['total_ill']
         )
 
-        # Append calculated XP along with other data
+        # Append calculated XP along with other data, including student_hours
         student_xp_data.append({
             'student_id': student.student_id,
             'student_fname': student.student_fname,
             'student_lname': student.student_lname,
+            'student_hours': student_hours,  # Add student_hours to the dictionary
             'total_shelfreads': total_shelfreads,
             'total_problem_items': total_problem_items,
             'total_in_house': total_in_house,
             'total_shelving': total_shelving,
             'total_holds_list': total_holds_list,
-            'total_rm_list': total_rm_list,
+            'total_ill': total_ill,
             'total_xp': total_xp
         })
     
     # Return the data to the template
     return render_template('supervisor-student-overall-view.html', students_data=student_xp_data)
+
+
+
 
 
 

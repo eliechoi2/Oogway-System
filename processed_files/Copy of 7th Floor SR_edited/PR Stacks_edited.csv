@@ -1,0 +1,3 @@
+student_id,date,Start DateTime,End DateTime,shelfreads_completed,start_call,end_call,Duration
+16.0,2022-08-15,2022-08-15 11:30:00,2022-08-15 11:55:00,11.0,9199.4.C65T6 2013,9199.4.Q563S45 2020,0.42
+1.0,2024-02-06,2024-02-06 14:14:00,2024-02-06 15:00:00,11.0,PR2351.G65.1966.V1,PR.2399.W7Z95.1993,0.77
