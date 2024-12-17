@@ -1211,17 +1211,34 @@ def plot_top_students_holdlist():
     # Query for first and last names
     student_names = []
     for student_id in students:
-        student = db.session.query(Student).filter_by(student_id=student_id).first()  # Assuming Student table contains student names
+        student = db.session.query(Student).filter_by(student_id=student_id).first()
         if student:
             student_names.append(f"{student.student_fname} {student.student_lname}")
         else:
             student_names.append(f"Student {student_id}")
 
     # Create the Plotly bar chart
-    fig = go.Figure(data=[go.Bar(x=student_names, y=total_holds, marker_color='blue')])
-    fig.update_layout(title='Top 3 Students with the Most Holds',
-                      xaxis_title='Students',
-                      yaxis_title='Total Holds')
+    fig = go.Figure(data=[go.Bar(x=student_names, y=total_holds, marker_color='purple')])
+    fig.update_layout(
+        title='Top 3 Most Holds',
+        xaxis_title='Students',
+        yaxis_title='Total Holds',
+        width=400,  
+        height=300,
+        title_font=dict(size=18, family="Poppins, sans-serif"),
+        xaxis=dict(
+            showticklabels=False,  # Hide x-axis
+            tickangle=45,  
+            tickmode='array',  
+            tickfont=dict(size=12, family="Poppins, sans-serif"),  
+            ticks='outside'  
+        ),
+        yaxis=dict(tickfont=dict(size=12, family="Poppins, sans-serif")),  
+        margin=dict(b=60),  
+        plot_bgcolor='white',  # Set background color to white
+        paper_bgcolor='white',  # Set the overall figure background to white
+        font=dict(family="Poppins, sans-serif")  # Set all fonts to Poppins
+    )
 
     # Return the figure as HTML
     return fig.to_html(full_html=False)
@@ -1240,17 +1257,34 @@ def plot_top_students_ill():
     # Query for first and last names
     student_names = []
     for student_id in students:
-        student = db.session.query(Student).filter_by(student_id=student_id).first()  # Assuming Student table contains student names
+        student = db.session.query(Student).filter_by(student_id=student_id).first()
         if student:
             student_names.append(f"{student.student_fname} {student.student_lname}")
         else:
             student_names.append(f"Student {student_id}")
 
     # Create the Plotly bar chart
-    fig = go.Figure(data=[go.Bar(x=student_names, y=total_ill, marker_color='green')])
-    fig.update_layout(title='Top 3 Students with the Most ILL Slips',
-                      xaxis_title='Students',
-                      yaxis_title='Total ILL Slips')
+    fig = go.Figure(data=[go.Bar(x=student_names, y=total_ill, marker_color='cyan')])
+    fig.update_layout(
+        title='Top 3 Most ILL',
+        xaxis_title='Students',
+        yaxis_title='Total ILL Slips',
+        width=400,  
+        height=300,
+        title_font=dict(size=18, family="Poppins, sans-serif"),
+        xaxis=dict(
+            showticklabels=False,  # Hide x-axis
+            tickangle=45,  
+            tickmode='array',  
+            tickfont=dict(size=12, family="Poppins, sans-serif"),  
+            ticks='outside'  
+        ),
+        yaxis=dict(tickfont=dict(size=12, family="Poppins, sans-serif")),  
+        margin=dict(b=60),  
+        plot_bgcolor='white',  # Set background color to white
+        paper_bgcolor='white',  # Set the overall figure background to white
+        font=dict(family="Poppins, sans-serif")  # Set all fonts to Poppins
+    )
 
     # Return the figure as HTML
     return fig.to_html(full_html=False)
@@ -1269,17 +1303,34 @@ def plot_top_students_inhouse():
     # Query for first and last names
     student_names = []
     for student_id in students:
-        student = db.session.query(Student).filter_by(student_id=student_id).first()  # Assuming Student table contains student names
+        student = db.session.query(Student).filter_by(student_id=student_id).first()
         if student:
             student_names.append(f"{student.student_fname} {student.student_lname}")
         else:
             student_names.append(f"Student {student_id}")
 
     # Create the Plotly bar chart
-    fig = go.Figure(data=[go.Bar(x=student_names, y=total_in_house, marker_color='orange')])
-    fig.update_layout(title='Top 3 Students with the Most In House',
-                      xaxis_title='Students',
-                      yaxis_title='Total In House')
+    fig = go.Figure(data=[go.Bar(x=student_names, y=total_in_house, marker_color='blue')])
+    fig.update_layout(
+        title='Top 3 Most In-House',
+        xaxis_title='Students',
+        yaxis_title='Total In House',
+        width=400,  
+        height=300,
+        title_font=dict(size=18, family="Poppins, sans-serif"),
+        xaxis=dict(
+            showticklabels=False,  # Hide x-axis
+            tickangle=45,  
+            tickmode='array',  
+            tickfont=dict(size=12, family="Poppins, sans-serif"),  
+            ticks='outside'  
+        ),
+        yaxis=dict(tickfont=dict(size=12, family="Poppins, sans-serif")),  
+        margin=dict(b=60),  
+        plot_bgcolor='white',  # Set background color to white
+        paper_bgcolor='white',  # Set the overall figure background to white
+        font=dict(family="Poppins, sans-serif")  # Set all fonts to Poppins
+    )
 
     # Return the figure as HTML
     return fig.to_html(full_html=False)
@@ -1298,17 +1349,34 @@ def plot_top_students_shelving():
     # Query for first and last names
     student_names = []
     for student_id in students:
-        student = db.session.query(Student).filter_by(student_id=student_id).first()  # Assuming Student table contains student names
+        student = db.session.query(Student).filter_by(student_id=student_id).first()
         if student:
             student_names.append(f"{student.student_fname} {student.student_lname}")
         else:
             student_names.append(f"Student {student_id}")
 
     # Create the Plotly bar chart
-    fig = go.Figure(data=[go.Bar(x=student_names, y=total_shelving, marker_color='red')])
-    fig.update_layout(title='Top 3 Students with the Most Shelving',
-                      xaxis_title='Students',
-                      yaxis_title='Total Shelving')
+    fig = go.Figure(data=[go.Bar(x=student_names, y=total_shelving, marker_color='pink')])
+    fig.update_layout(
+        title='Top 3 Most Shelving',
+        xaxis_title='Students',
+        yaxis_title='Total Shelving',
+        width=400,  
+        height=300,
+        title_font=dict(size=18, family="Poppins, sans-serif"),
+        xaxis=dict(
+            showticklabels=False,  # Hide x-axis
+            tickangle=45,  
+            tickmode='array',  
+            tickfont=dict(size=12, family="Poppins, sans-serif"),  
+            ticks='outside'  
+        ),
+        yaxis=dict(tickfont=dict(size=12, family="Poppins, sans-serif")),  
+        margin=dict(b=60),  
+        plot_bgcolor='white',  # Set background color to white
+        paper_bgcolor='white',  # Set the overall figure background to white
+        font=dict(family="Poppins, sans-serif")  # Set all fonts to Poppins
+    )
 
     # Return the figure as HTML
     return fig.to_html(full_html=False)
@@ -1327,7 +1395,7 @@ def plot_top_students_problem_items():
     # Query for first and last names
     student_names = []
     for student_id in students:
-        student = db.session.query(Student).filter_by(student_id=student_id).first()  # Assuming Student table contains student names
+        student = db.session.query(Student).filter_by(student_id=student_id).first()
         if student:
             student_names.append(f"{student.student_fname} {student.student_lname}")
         else:
@@ -1335,9 +1403,26 @@ def plot_top_students_problem_items():
 
     # Create the Plotly bar chart
     fig = go.Figure(data=[go.Bar(x=student_names, y=total_problems, marker_color='purple')])
-    fig.update_layout(title='Top 3 Students with the Most Problem Items',
-                      xaxis_title='Students',
-                      yaxis_title='Total Problem Items')
+    fig.update_layout(
+        title='Top 3 Most Problem Items',
+        xaxis_title='Students',
+        yaxis_title='Total Problem Items',
+        width=400,  
+        height=300,
+        title_font=dict(size=18, family="Poppins, sans-serif"),
+        xaxis=dict(
+            showticklabels=False,  # Hide x-axis
+            tickangle=45,  
+            tickmode='array',  
+            tickfont=dict(size=12, family="Poppins, sans-serif"),  
+            ticks='outside'  
+        ),
+        yaxis=dict(tickfont=dict(size=12, family="Poppins, sans-serif")),  
+        margin=dict(b=60),  
+        plot_bgcolor='white',  # Set background color to white
+        paper_bgcolor='white',  # Set the overall figure background to white
+        font=dict(family="Poppins, sans-serif")  # Set all fonts to Poppins
+    )
 
     # Return the figure as HTML
     return fig.to_html(full_html=False)
@@ -1356,51 +1441,6 @@ def plot_top_students_shelf_reading():
     # Query for first and last names
     student_names = []
     for student_id in students:
-        student = db.session.query(Student).filter_by(student_id=student_id).first()  # Assuming Student table contains student names
-        if student:
-            student_names.append(f"{student.student_fname} {student.student_lname}")
-        else:
-            student_names.append(f"Student {student_id}")
-
-    # Create the Plotly bar chart
-    fig = go.Figure(data=[go.Bar(x=student_names, y=shelfreads_completed, marker_color='brown')])
-    fig.update_layout(title='Top 3 Students with the Most Shelf Reads Completed',
-                      xaxis_title='Students',
-                      yaxis_title='Total Shelf Reads Completed')
-
-    # Return the figure as HTML
-    return fig.to_html(full_html=False)
-
-def plot_top_students_overall():
-    # Query data for all activities combined (holds, ILL, in-house, shelving, problem items, shelf reads)
-    activity_data = db.session.query(
-        Student.student_id,
-        (db.func.sum(HoldList.total_holds) +
-         db.func.sum(ILLList.total_ill) +
-         db.func.sum(InHouse.total_in_house) +
-         db.func.sum(Shelving.total_shelving) +
-         db.func.sum(Problem.total_problems) +
-         db.func.sum(ShelfReading.shelfreads_completed)
-        ).label('total_activity')
-    ) \
-    .join(HoldList, HoldList.student_id == Student.student_id) \
-    .join(ILLList, ILLList.student_id == Student.student_id) \
-    .join(InHouse, InHouse.student_id == Student.student_id) \
-    .join(Shelving, Shelving.student_id == Student.student_id) \
-    .join(Problem, Problem.student_id == Student.student_id) \
-    .join(ShelfReading, ShelfReading.student_id == Student.student_id) \
-    .group_by(Student.student_id) \
-    .order_by(db.func.sum(HoldList.total_holds + ILLList.total_ill + InHouse.total_in_house + Shelving.total_shelving + Problem.total_problems + ShelfReading.shelfreads_completed).desc()) \
-    .limit(3) \
-    .all()
-
-    # Prepare data for the bar chart
-    students = [student[0] for student in activity_data]
-    total_activity = [student[1] for student in activity_data]
-
-    # Query for first and last names
-    student_names = []
-    for student_id in students:
         student = db.session.query(Student).filter_by(student_id=student_id).first()
         if student:
             student_names.append(f"{student.student_fname} {student.student_lname}")
@@ -1408,39 +1448,141 @@ def plot_top_students_overall():
             student_names.append(f"Student {student_id}")
 
     # Create the Plotly bar chart
-    fig = go.Figure(data=[go.Bar(x=student_names, y=total_activity, marker_color='cyan')])
-    fig.update_layout(title='Top 3 Students with the Most Combined Activity',
-                      xaxis_title='Students',
-                      yaxis_title='Total Activity',
-                      template="plotly_dark",
-                      plot_bgcolor='white',
-                      paper_bgcolor='white')
+    fig = go.Figure(data=[go.Bar(x=student_names, y=shelfreads_completed, marker_color='cyan')])
+    fig.update_layout(
+        title='Top 3 Most Shelfreading',
+        xaxis_title='Students',
+        yaxis_title='Total Shelfreading',
+        width=400,  
+        height=300,
+        title_font=dict(size=18, family="Poppins, sans-serif"),
+        xaxis=dict(
+            showticklabels=False,  # Hide x-axis
+            tickangle=45,  
+            tickmode='array',  
+            tickfont=dict(size=12, family="Poppins, sans-serif"),  
+            ticks='outside'  
+        ),
+        yaxis=dict(tickfont=dict(size=12, family="Poppins, sans-serif")),  
+        margin=dict(b=60),  
+        plot_bgcolor='white',  # Set background color to white
+        paper_bgcolor='white',  # Set the overall figure background to white
+        font=dict(family="Poppins, sans-serif")  # Set all fonts to Poppins
+    )
 
     # Return the figure as HTML
     return fig.to_html(full_html=False)
 
 
+
+
+import plotly.graph_objects as go
+from sqlalchemy.sql import func
+
+def plot_top_students_overall():
+    """
+    Query and aggregate student performance across all tasks,
+    identify the top 5 students, and generate a styled pie chart.
+    """
+
+    # Step 1: Aggregate XP data dynamically
+    overall_performance = db.session.query(
+        Student.student_id,
+        Student.student_fname,
+        Student.student_lname,
+        func.coalesce(func.sum(HoldList.total_holds), 0) +
+        func.coalesce(func.sum(ILLList.total_ill), 0) +
+        func.coalesce(func.sum(InHouse.total_in_house), 0) +
+        func.coalesce(func.sum(Shelving.total_shelving), 0) +
+        func.coalesce(func.sum(Problem.total_problems), 0) +
+        func.coalesce(func.sum(ShelfReading.shelfreads_completed), 0)
+    ).join(HoldList, Student.student_id == HoldList.student_id, isouter=True) \
+     .join(ILLList, Student.student_id == ILLList.student_id, isouter=True) \
+     .join(InHouse, Student.student_id == InHouse.student_id, isouter=True) \
+     .join(Shelving, Student.student_id == Shelving.student_id, isouter=True) \
+     .join(Problem, Student.student_id == Problem.student_id, isouter=True) \
+     .join(ShelfReading, Student.student_id == ShelfReading.student_id, isouter=True) \
+     .group_by(Student.student_id, Student.student_fname, Student.student_lname) \
+     .order_by(func.coalesce(func.sum(HoldList.total_holds), 0) +
+               func.coalesce(func.sum(ILLList.total_ill), 0) +
+               func.coalesce(func.sum(InHouse.total_in_house), 0) +
+               func.coalesce(func.sum(Shelving.total_shelving), 0) +
+               func.coalesce(func.sum(Problem.total_problems), 0) +
+               func.coalesce(func.sum(ShelfReading.shelfreads_completed), 0).desc()) \
+     .limit(5).all()
+
+    # Step 2: Prepare data for the pie chart
+    student_names = []
+    total_points = []
+
+    for student_id, fname, lname, total_points_sum in overall_performance:
+        student_names.append(f"{fname} {lname}")
+        total_points.append(total_points_sum)
+
+    # Step 3: Style and Create the Pie Chart
+    fig = go.Figure(data=[go.Pie(
+        labels=student_names,
+        values=total_points,
+        hole=0.2,  # Donut effect
+        marker=dict(
+            colors=['#00FFD1', '#00BFFF', '#7D5BA6', '#5B42F3', '#3A33D1'],  # Aqua, blue, purple shades
+            line=dict(color='#FFFFFF', width=2)  # White border for clarity
+        ),
+        textinfo='percent+label',
+        insidetextorientation='horizontal',
+        pull=[0, 0, 0, 0, 0],  # Slightly emphasize the first slice
+    )])
+
+    # Step 4: Layout Customizations
+    fig.update_layout(
+        title=dict(
+            text='Top 5 Best Performing Students',
+            font=dict(size=22, family='Poppins, sans-serif', color='#333333'),
+            x=0.5,  # Center align the title
+            y=0.95
+        ),
+        legend=dict(
+            orientation="h",  # Horizontal legend
+            yanchor="bottom",
+            y=-0.35,  # Position at bottom
+            xanchor="center",
+            x=0.5,
+            font=dict(size=12, family='Poppins, sans-serif', color='#333333')
+        ),
+        paper_bgcolor='#FFFFFF',  # White background
+        plot_bgcolor='#FFFFFF',   # Ensure consistent white background
+        width=600,  # Increased width
+        height=500  # Increased height
+    )
+
+    # Return the figure as HTML
+    return fig.to_html(full_html=False)
+
+
+
+
+
+
 @app.route('/supervisor-analytics')
 def supervisor_analytics():
-    # Generate the base64-encoded images for all the plots
-    holdlist_image = plot_top_students_holdlist()
-    ill_image = plot_top_students_ill()
-    inhouse_image = plot_top_students_inhouse()
-    shelving_image = plot_top_students_shelving()
-    problem_items_image = plot_top_students_problem_items()
-    shelf_reading_image = plot_top_students_shelf_reading()
-    overall_image = plot_top_students_overall()  # New graph for overall top 3 students
+    # Generate interactive Plotly graphs for all categories
+    holdlist_graph = plot_top_students_holdlist()
+    ill_graph = plot_top_students_ill()
+    inhouse_graph = plot_top_students_inhouse()
+    shelving_graph = plot_top_students_shelving()
+    problem_items_graph = plot_top_students_problem_items()
+    shelf_reading_graph = plot_top_students_shelf_reading()
+    top_students_overall = plot_top_students_overall()
 
-    # Pass the images to the template
+    # Pass the graphs to the template
     return render_template('supervisor-analytics.html', 
-                           holdlist_image=holdlist_image,
-                           ill_image=ill_image,
-                           inhouse_image=inhouse_image,
-                           shelving_image=shelving_image,
-                           problem_items_image=problem_items_image,
-                           shelf_reading_image=shelf_reading_image,
-                           overall_image=overall_image)  # Pass the new graph
-
+                           holdlist_graph=holdlist_graph,
+                           ill_graph=ill_graph,
+                           inhouse_graph=inhouse_graph,
+                           shelving_graph=shelving_graph,
+                           problem_items_graph=problem_items_graph,
+                           shelf_reading_graph=shelf_reading_graph,
+                           top_students_overall=top_students_overall)
 
 
 
