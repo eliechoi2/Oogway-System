@@ -13,7 +13,7 @@ from sqlalchemy.orm.exc import NoResultFound
 import numpy as np
 import re
 from sqlalchemy.orm import aliased
-from sqlalchemy import func, or_
+from sqlalchemy import func, or_, desc
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -1179,14 +1179,12 @@ def supervisor_student_overall_view():
 
 
             
-# supervisor Routes
 @app.route('/supervisor-student-list-view')
 def supervisor_student_list_view():
     students = Student.query.order_by(Student.student_id).all()
     search_query = request.args.get('search_query', '').lower()
     
     if search_query:
-        # Filter by the student's first or last name
         query = query.filter(
             or_(
                 Student.student_fname.ilike(f"%{search_query}%"),
@@ -1195,85 +1193,253 @@ def supervisor_student_list_view():
         )
     return render_template('supervisor-student-list-view.html', students=students)
 
+import plotly.graph_objects as go
+import plotly.express as px
+from flask import render_template
+
+def plot_top_students_holdlist():
+    # Query data for Hold List
+    holdlist_data = db.session.query(HoldList.student_id, db.func.sum(HoldList.total_holds).label('total_holds')) \
+                             .group_by(HoldList.student_id) \
+                             .order_by(db.func.sum(HoldList.total_holds).desc()) \
+                             .limit(3).all()
+    
+    # Prepare data for the bar chart
+    students = [student[0] for student in holdlist_data]
+    total_holds = [student[1] for student in holdlist_data]
+
+    # Query for first and last names
+    student_names = []
+    for student_id in students:
+        student = db.session.query(Student).filter_by(student_id=student_id).first()  # Assuming Student table contains student names
+        if student:
+            student_names.append(f"{student.student_fname} {student.student_lname}")
+        else:
+            student_names.append(f"Student {student_id}")
+
+    # Create the Plotly bar chart
+    fig = go.Figure(data=[go.Bar(x=student_names, y=total_holds, marker_color='blue')])
+    fig.update_layout(title='Top 3 Students with the Most Holds',
+                      xaxis_title='Students',
+                      yaxis_title='Total Holds')
+
+    # Return the figure as HTML
+    return fig.to_html(full_html=False)
+
+def plot_top_students_ill():
+    # Query data for ILL slips
+    ill_data = db.session.query(ILLList.student_id, db.func.sum(ILLList.total_ill).label('total_ill')) \
+                        .group_by(ILLList.student_id) \
+                        .order_by(db.func.sum(ILLList.total_ill).desc()) \
+                        .limit(3).all()
+    
+    # Prepare data for the bar chart
+    students = [student[0] for student in ill_data]
+    total_ill = [student[1] for student in ill_data]
+
+    # Query for first and last names
+    student_names = []
+    for student_id in students:
+        student = db.session.query(Student).filter_by(student_id=student_id).first()  # Assuming Student table contains student names
+        if student:
+            student_names.append(f"{student.student_fname} {student.student_lname}")
+        else:
+            student_names.append(f"Student {student_id}")
+
+    # Create the Plotly bar chart
+    fig = go.Figure(data=[go.Bar(x=student_names, y=total_ill, marker_color='green')])
+    fig.update_layout(title='Top 3 Students with the Most ILL Slips',
+                      xaxis_title='Students',
+                      yaxis_title='Total ILL Slips')
+
+    # Return the figure as HTML
+    return fig.to_html(full_html=False)
+
+def plot_top_students_inhouse():
+    # Query data for In House
+    inhouse_data = db.session.query(InHouse.student_id, db.func.sum(InHouse.total_in_house).label('total_in_house')) \
+                             .group_by(InHouse.student_id) \
+                             .order_by(db.func.sum(InHouse.total_in_house).desc()) \
+                             .limit(3).all()
+    
+    # Prepare data for the bar chart
+    students = [student[0] for student in inhouse_data]
+    total_in_house = [student[1] for student in inhouse_data]
+
+    # Query for first and last names
+    student_names = []
+    for student_id in students:
+        student = db.session.query(Student).filter_by(student_id=student_id).first()  # Assuming Student table contains student names
+        if student:
+            student_names.append(f"{student.student_fname} {student.student_lname}")
+        else:
+            student_names.append(f"Student {student_id}")
+
+    # Create the Plotly bar chart
+    fig = go.Figure(data=[go.Bar(x=student_names, y=total_in_house, marker_color='orange')])
+    fig.update_layout(title='Top 3 Students with the Most In House',
+                      xaxis_title='Students',
+                      yaxis_title='Total In House')
+
+    # Return the figure as HTML
+    return fig.to_html(full_html=False)
+
+def plot_top_students_shelving():
+    # Query data for Shelving
+    shelving_data = db.session.query(Shelving.student_id, db.func.sum(Shelving.total_shelving).label('total_shelving')) \
+                              .group_by(Shelving.student_id) \
+                              .order_by(db.func.sum(Shelving.total_shelving).desc()) \
+                              .limit(3).all()
+    
+    # Prepare data for the bar chart
+    students = [student[0] for student in shelving_data]
+    total_shelving = [student[1] for student in shelving_data]
+
+    # Query for first and last names
+    student_names = []
+    for student_id in students:
+        student = db.session.query(Student).filter_by(student_id=student_id).first()  # Assuming Student table contains student names
+        if student:
+            student_names.append(f"{student.student_fname} {student.student_lname}")
+        else:
+            student_names.append(f"Student {student_id}")
+
+    # Create the Plotly bar chart
+    fig = go.Figure(data=[go.Bar(x=student_names, y=total_shelving, marker_color='red')])
+    fig.update_layout(title='Top 3 Students with the Most Shelving',
+                      xaxis_title='Students',
+                      yaxis_title='Total Shelving')
+
+    # Return the figure as HTML
+    return fig.to_html(full_html=False)
+
+def plot_top_students_problem_items():
+    # Query data for Problem Items
+    problem_items_data = db.session.query(Problem.student_id, db.func.sum(Problem.total_problems).label('total_problems')) \
+                                  .group_by(Problem.student_id) \
+                                  .order_by(db.func.sum(Problem.total_problems).desc()) \
+                                  .limit(3).all()
+    
+    # Prepare data for the bar chart
+    students = [student[0] for student in problem_items_data]
+    total_problems = [student[1] for student in problem_items_data]
+
+    # Query for first and last names
+    student_names = []
+    for student_id in students:
+        student = db.session.query(Student).filter_by(student_id=student_id).first()  # Assuming Student table contains student names
+        if student:
+            student_names.append(f"{student.student_fname} {student.student_lname}")
+        else:
+            student_names.append(f"Student {student_id}")
+
+    # Create the Plotly bar chart
+    fig = go.Figure(data=[go.Bar(x=student_names, y=total_problems, marker_color='purple')])
+    fig.update_layout(title='Top 3 Students with the Most Problem Items',
+                      xaxis_title='Students',
+                      yaxis_title='Total Problem Items')
+
+    # Return the figure as HTML
+    return fig.to_html(full_html=False)
+
+def plot_top_students_shelf_reading():
+    # Query data for Shelf Reading
+    shelf_reading_data = db.session.query(ShelfReading.student_id, db.func.sum(ShelfReading.shelfreads_completed).label('shelfreads_completed')) \
+                                  .group_by(ShelfReading.student_id) \
+                                  .order_by(db.func.sum(ShelfReading.shelfreads_completed).desc()) \
+                                  .limit(3).all()
+    
+    # Prepare data for the bar chart
+    students = [student[0] for student in shelf_reading_data]
+    shelfreads_completed = [student[1] for student in shelf_reading_data]
+
+    # Query for first and last names
+    student_names = []
+    for student_id in students:
+        student = db.session.query(Student).filter_by(student_id=student_id).first()  # Assuming Student table contains student names
+        if student:
+            student_names.append(f"{student.student_fname} {student.student_lname}")
+        else:
+            student_names.append(f"Student {student_id}")
+
+    # Create the Plotly bar chart
+    fig = go.Figure(data=[go.Bar(x=student_names, y=shelfreads_completed, marker_color='brown')])
+    fig.update_layout(title='Top 3 Students with the Most Shelf Reads Completed',
+                      xaxis_title='Students',
+                      yaxis_title='Total Shelf Reads Completed')
+
+    # Return the figure as HTML
+    return fig.to_html(full_html=False)
+
+def plot_top_students_overall():
+    # Query data for all activities combined (holds, ILL, in-house, shelving, problem items, shelf reads)
+    activity_data = db.session.query(
+        Student.student_id,
+        (db.func.sum(HoldList.total_holds) +
+         db.func.sum(ILLList.total_ill) +
+         db.func.sum(InHouse.total_in_house) +
+         db.func.sum(Shelving.total_shelving) +
+         db.func.sum(Problem.total_problems) +
+         db.func.sum(ShelfReading.shelfreads_completed)
+        ).label('total_activity')
+    ) \
+    .join(HoldList, HoldList.student_id == Student.student_id) \
+    .join(ILLList, ILLList.student_id == Student.student_id) \
+    .join(InHouse, InHouse.student_id == Student.student_id) \
+    .join(Shelving, Shelving.student_id == Student.student_id) \
+    .join(Problem, Problem.student_id == Student.student_id) \
+    .join(ShelfReading, ShelfReading.student_id == Student.student_id) \
+    .group_by(Student.student_id) \
+    .order_by(db.func.sum(HoldList.total_holds + ILLList.total_ill + InHouse.total_in_house + Shelving.total_shelving + Problem.total_problems + ShelfReading.shelfreads_completed).desc()) \
+    .limit(3) \
+    .all()
+
+    # Prepare data for the bar chart
+    students = [student[0] for student in activity_data]
+    total_activity = [student[1] for student in activity_data]
+
+    # Query for first and last names
+    student_names = []
+    for student_id in students:
+        student = db.session.query(Student).filter_by(student_id=student_id).first()
+        if student:
+            student_names.append(f"{student.student_fname} {student.student_lname}")
+        else:
+            student_names.append(f"Student {student_id}")
+
+    # Create the Plotly bar chart
+    fig = go.Figure(data=[go.Bar(x=student_names, y=total_activity, marker_color='cyan')])
+    fig.update_layout(title='Top 3 Students with the Most Combined Activity',
+                      xaxis_title='Students',
+                      yaxis_title='Total Activity',
+                      template="plotly_dark",
+                      plot_bgcolor='white',
+                      paper_bgcolor='white')
+
+    # Return the figure as HTML
+    return fig.to_html(full_html=False)
+
+
 @app.route('/supervisor-analytics')
 def supervisor_analytics():
-    # Get all students
-    students = db.session.query(Student).all()
-    
-    # Define XP values for each task
-    XP_VALUES = {
-        'total_shelfreads': 10,
-        'total_problem_items': 5,
-        'total_in_house': 2,
-        'total_shelving': 8,
-        'total_holds_list': 3,
-        'total_rm_list': 4
-    }
+    # Generate the base64-encoded images for all the plots
+    holdlist_image = plot_top_students_holdlist()
+    ill_image = plot_top_students_ill()
+    inhouse_image = plot_top_students_inhouse()
+    shelving_image = plot_top_students_shelving()
+    problem_items_image = plot_top_students_problem_items()
+    shelf_reading_image = plot_top_students_shelf_reading()
+    overall_image = plot_top_students_overall()  # New graph for overall top 3 students
 
-    # Store top performers by task
-    top_3_performers_by_task = {}
-    max_xp_by_task = {task: 1 for task in XP_VALUES}  # Initialize with 1 to avoid zero division
-    student_xp_data = []
-
-    for task in XP_VALUES:
-        # Calculate individual XP for the specific task
-        task_performers = []
-
-        for student in students:
-            student_data = db.session.query(Student_Data).filter_by(student_id=student.student_id).first()
-            if not student_data:
-                continue  # Skip if there is no associated student data
-
-            # Get task-specific value
-            task_xp = getattr(student_data, task, 0) * XP_VALUES[task]
-
-            # Track the max XP for scaling progress bars
-            max_xp_by_task[task] = max(max_xp_by_task[task], task_xp)
-
-            task_performers.append({
-                'student_id': student.student_id,
-                'student_fname': student.student_fname,
-                'student_lname': student.student_lname,
-                'xp_for_task': task_xp
-            })
-
-            # Collect data for overall XP calculation
-            student_xp_data.append({
-                'student_id': student.student_id,
-                'student_fname': student.student_fname,
-                'student_lname': student.student_lname,
-                'task': task,
-                'xp_for_task': task_xp
-            })
-
-        # Sort and get the top 3 performers for the task
-        top_3_performers_by_task[task] = sorted(task_performers, key=lambda x: x['xp_for_task'], reverse=True)[:3]
-
-    # Calculate overall top 3 performers
-    total_xp_by_student = {}
-    for data in student_xp_data:
-        total_xp_by_student[data['student_id']] = total_xp_by_student.get(data['student_id'], 0) + data['xp_for_task']
-
-    # Sort by total XP and get the top 3 performers overall
-    top_3_overall = sorted(
-        [{'student_id': student_id, 'student_fname': next(item for item in student_xp_data if item['student_id'] == student_id)['student_fname'],
-          'student_lname': next(item for item in student_xp_data if item['student_id'] == student_id)['student_lname'], 
-          'total_xp': total_xp} 
-         for student_id, total_xp in total_xp_by_student.items()],
-        key=lambda x: x['total_xp'], reverse=True
-    )[:3]
-
-    # Render the template with the task-specific performers and max XP, as well as overall top performers
-    return render_template(
-        'supervisor-analytics.html',
-        top_3_performers_by_task=top_3_performers_by_task,
-        max_xp_by_task=max_xp_by_task,
-        top_3_overall=top_3_overall
-    )
-
-
-
-
+    # Pass the images to the template
+    return render_template('supervisor-analytics.html', 
+                           holdlist_image=holdlist_image,
+                           ill_image=ill_image,
+                           inhouse_image=inhouse_image,
+                           shelving_image=shelving_image,
+                           problem_items_image=problem_items_image,
+                           shelf_reading_image=shelf_reading_image,
+                           overall_image=overall_image)  # Pass the new graph
 
 
 
