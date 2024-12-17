@@ -13,26 +13,32 @@ Analytics
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <div class="container">
-    <h1>Top 3 Students Analytics</h1>
-    {{ overall_image|safe }}
-
-    <h2>Top 3 Students with the Most Holds</h2>
-    {{ holdlist_graph | safe }}
-
-    <h2>Top 3 Students with the Most ILL Slips</h2>
-    {{ ill_graph | safe }}
-
-    <h2>Top 3 Students with the Most In House</h2>
-    {{ inhouse_graph | safe }}
-
-    <h2>Top 3 Students with the Most Shelving</h2>
-    {{ shelving_graph | safe }}
-
-    <h2>Top 3 Students with the Most Problem Items</h2>
-    {{ problem_items_graph | safe }}
-
-    <h2>Top 3 Students with the Most Shelf Reads Completed</h2>
-    {{ shelf_reading_graph | safe }}
-
+        <div class="row">
+            {{ top_students_overall|safe }}
+        </div>
+            <div class="row">
+                <div class="col-4">
+                    {{ holdlist_graph | safe }}
+                </div>
+                <div class="col-4">
+                    {{ ill_graph | safe }}
+                </div>
+                <div class="col-4">
+                    {{ inhouse_graph | safe }}
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-4">
+                    {{ shelving_graph | safe }}
+                </div>
+                <div class="col-4">
+                    {{ problem_items_graph | safe }}
+                </div>
+                <div class="col-4">
+                    {{ shelf_reading_graph | safe }}
+                </div>
+                
+            </div>
 </div>
 {% endblock %}
